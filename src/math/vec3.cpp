@@ -8,7 +8,12 @@ vec3::vec3()
   e[1] = 0;
   e[2] = 0;
 }
-vec3::vec3(double e0, double e1, double e2) : e{e0, e1, e2} {}
+vec3::vec3(double e0, double e1, double e2)
+{
+  e[0] = e0;
+  e[1] = e1;
+  e[2] = e2;
+}
 
 double vec3::x() { return e[0]; }
 double vec3::y() { return e[1]; }
