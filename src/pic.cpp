@@ -1,11 +1,22 @@
 #include <iostream>
 #include "math/vec3.h"
+#include "math/ray.h"
 using namespace std;
 int main()
 {
   point3 a = vec3(1, 2, 3);
+  point3 b = vec3(1, 2, 3);
+  // point3 b = vec3(3, 1, 3);
+  // cout << a.dot(b) << endl;
   cout << a << endl;
+  a -= b;
+  cout << a.cross(b) << endl;
 
+  ray xaxis = ray(vec3(0, 0, 0), vec3(1, 0, 0));
+
+  point3 x10 = xaxis.point_at_time(10);
+
+  cout << x10 << endl;
   // freopen("1.ppm", "w", stdout);
   //  Image
   const int image_width = 2;
