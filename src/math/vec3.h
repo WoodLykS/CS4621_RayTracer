@@ -20,6 +20,8 @@ public:
 
   vec3 operator-();
   vec3 operator+();
+  vec3 operator+(vec3 v);
+  vec3 operator*(double t);
   // double operator[](int i) { return e[i]; }
   double &operator[](int i);
 
@@ -44,6 +46,8 @@ public:
   double dot(vec3 v);
 
   double norm();
+
+  vec3 &vec3::normalize();
 
   void normalized();
 };
