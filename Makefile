@@ -7,7 +7,7 @@ MATHSRC := $(wildcard src/math/*.cpp)
 MATHBIN := $(MATHSRC:%.cpp=%.o)
 
 clean:
-	rm -rvf $(shell find . -name "*.o") *.exe
+	rm -rvf $(shell find . -name "*.o") *.exe *.out
 
 all: build
 
