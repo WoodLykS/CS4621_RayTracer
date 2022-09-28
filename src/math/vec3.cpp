@@ -115,17 +115,17 @@ istream &operator>>(std::istream &in, vec3 &v)
   return in;
 }
 
-inline vec3 operator+(vec3 &u, vec3 &v)
+vec3 operator+(vec3 &u, vec3 &v)
 {
   return vec3(u.x() + v.x(), u.y() + v.y(), u.z() + v.z());
 }
 
-inline vec3 operator-(vec3 &u, vec3 &v)
+vec3 operator-(vec3 &u, vec3 &v)
 {
   return vec3(u.x() - v.x(), u.y() - v.y(), u.z() - v.z());
 }
 
-inline vec3 operator*(double t, vec3 &v)
+vec3 operator*(double t, vec3 &v)
 {
   return vec3(t * v.x(), t * v.y(), t * v.z());
 }
@@ -135,17 +135,17 @@ inline vec3 operator*(double t, vec3 &v)
 //   return t * v;
 // }
 
-inline vec3 operator/(vec3 v, double t)
+vec3 operator/(vec3 v, double t)
 {
   return (1 / t) * v;
 }
 
-inline double dot(vec3 &u, vec3 &v)
+double dot(vec3 u, vec3 v)
 {
   return u.x() * v.x() + u.y() * v.y() + u.z() * v.z();
 }
 
-inline vec3 cross(vec3 &u, vec3 &v)
+vec3 cross(vec3 u, vec3 v)
 {
   return vec3(u.y() * v.z() - u.z() * v.y(),
               u.z() * v.x() - u.x() * v.z(),

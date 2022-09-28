@@ -7,7 +7,7 @@
 #include <vector>
 
 // shared_ptr is a smart pointer that retains
-// shared ownership of an object trhough a pointer
+// shared ownership of an object through a pointer
 using std::shared_ptr;
 // this returns a shared_ptr
 using std::make_shared;

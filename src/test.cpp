@@ -15,7 +15,7 @@ int main()
   point3 a = vec3(1, 2, 3);
   point3 b = vec3(1, 2, 3);
   // point3 b = vec3(3, 1, 3);
-  // cout << a.dot(b) << endl;
+  cout << dot(a,b) << endl;
   cout << a << endl;
   a -= b;
   cout << a.cross(b) << endl;
