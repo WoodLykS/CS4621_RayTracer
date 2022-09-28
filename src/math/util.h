@@ -28,9 +28,10 @@ inline double degrees_to_radians(double degrees)
 // this helper map a decimal to rgb value
 void write_color(ostream &out, color pixel_color)
 {
-  out << static_cast<int>(255.99 + pixel_color.x()) << ' '
-      << static_cast<int>(255.99 + pixel_color.y()) << ' '
-      << static_cast<int>(255.99 + pixel_color.z()) << '\n';
+  //cout<<pixel_color.x();
+  out << static_cast<int>(255.99 * pixel_color.x()) << ' '
+      << static_cast<int>(255.99 * pixel_color.y()) << ' '
+      << static_cast<int>(255.99 * pixel_color.z()) << '\n';
 }
 
 #endif
