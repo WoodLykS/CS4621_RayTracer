@@ -103,4 +103,3 @@ std::istream &operator>>(std::istream &in, vec3 &v)
   v = vec3(x1, x2, x3);
   return in;
 }
-// int main() { return 0; }
