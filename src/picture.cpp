@@ -2,6 +2,7 @@
 #include "math/util.h"
 #include "math/hittablelist.h"
 #include "math/sphere.h"
+#include "math/vec3.h"
 #include <iostream>
 
 using namespace std;
@@ -39,7 +40,10 @@ int main()
   point3 origin = point3(0, 0, 0);
   vec3 horizontal = vec3(viewpoint_width, 0, 0);
   vec3 vertical = vec3(0, viewpoint_height, 0);
-  point3 lower_left_corner = origin - horizontal / 2 - vertical / 2 - vec3(0, 0, focal_length);
+  point3 lower_left_corner = origin;
+  lower_left_corner -= (horizontal / 2);
+  lower_left_corner -= (vertical / 2);
+  lower_left_corner -= vec3(0, 0, focal_length);
 
   // Render
   cout << "P3\n"

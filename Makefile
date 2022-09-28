@@ -25,7 +25,7 @@ sphere.o: src/math/sphere.cpp vec3.o
 hittablelist.o: src/math/hittablelist.cpp
 	${CC} -c src/math/hittablelist.cpp
 
-picture: clean sphere.o
+picture: clean sphere.o hittablelist.o ray.o
 	${CC} -o picture.out src/picture.cpp $(shell find . -name "*.o")
 
 test: clean vec3.o ray.o
