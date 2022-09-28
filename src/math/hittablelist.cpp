@@ -7,6 +7,12 @@
 using namespace std;
 
 hittable_list::hittable_list() {}
+
+void hittable_list::add(shared_ptr<hittable> object)
+{
+  objects.push_back(object);
+}
+
 hittable_list::hittable_list(shared_ptr<hittable> object)
 {
   add(object);
@@ -14,10 +20,6 @@ hittable_list::hittable_list(shared_ptr<hittable> object)
 void hittable_list::clear()
 {
   objects.clear();
-}
-void hittable_list::add(shared_ptr<hittable> object)
-{
-  objects.push_back(object);
 }
 
 bool hittable_list::hit(ray r, double t_min, double t_max, hit_record &rec)

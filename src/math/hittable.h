@@ -22,7 +22,7 @@ struct hit_record
 
 class hittable
 {
-public:
-  virtual bool hit(ray r, double t_min, double t_max, hit_record &rec);
+  public:
+    virtual bool hit(ray r, double t_min, double t_max, hit_record &rec) = 0;
 };
 #endif

@@ -1,5 +1,6 @@
 //////////// Wed Sep 28 1:13 AM ////////////
 #include "math/util.h"
+#include "math/hittable.h"
 #include "math/hittablelist.h"
 #include "math/sphere.h"
 #include "math/vec3.h"
@@ -8,7 +9,7 @@
 using namespace std;
 
 // vertical linear color interpolation aka lerp
-color ray_color(ray r, hittable world)
+color ray_color(ray r, hittable &world)
 {
   hit_record rec;
   if (world.hit(r, 0, infinity, rec))
@@ -45,6 +46,7 @@ int main()
   lower_left_corner -= (vertical / 2);
   lower_left_corner -= vec3(0, 0, focal_length);
 
+  freopen("pic.ppm","w",stdout);
   // Render
   cout << "P3\n"
        << image_width << ' ' << image_height << "\n255\n";
