@@ -5,14 +5,14 @@
 
 class ray
 {
-  vec3 origin;
-  vec3 direction;
-
 public:
+  vec3 origin;
+  vec3 velocity;
   ray();
   ray(vec3 a, vec3 b);
-  vec3 &get_origin();
-  vec3 &get_direction();
-  vec3 &point_at_time(double t);
+  // vec3 get_origin();
+  // vec3 get_velocity();
+  vec3 point_at_time(double t);
 };
+
 #endif

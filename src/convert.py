@@ -5,6 +5,6 @@ import cv2 as cv
 # print(img.read())
 
 img = cv.imread(argv[1])
-img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+#img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
 cv.imshow("ppm output", img)
 cv.waitKey(0)

@@ -22,7 +22,7 @@ public:
   vec3 operator+();
   vec3 operator+(vec3 v);
   vec3 operator*(double t);
-  // double operator[](int i) { return e[i]; }
+  //  double operator[](int i) { return e[i]; }
   double &operator[](int i);
 
   // Overload operators for vec3 class
@@ -47,8 +47,10 @@ public:
 
   double norm();
 
-  vec3 &vec3::normalize();
+  /**Normalize current vector and return it*/
+  vec3 normalize();
 
+  /**Normalize current vector*/
   void normalized();
 };
 
@@ -58,4 +60,16 @@ using color = vec3;  // RGB color
 
 std::ostream &operator<<(std::ostream &out, vec3 &v);
 std::istream &operator>>(std::istream &in, vec3 &v);
+
+inline vec3 operator+(vec3 &u, vec3 &v);
+inline vec3 operator-(vec3 &u, vec3 &v);
+
+inline vec3 operator*(double t, vec3 &v);
+// inline vec3 operator*(vec3 &v, double t);
+
+inline vec3 operator/(vec3 v, double t);
+
+inline double dot(vec3 &u, vec3 &v);
+inline vec3 cross(vec3 &u, vec3 &v);
+
 #endif
