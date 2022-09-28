@@ -33,7 +33,7 @@ bool sphere::hit(ray r, double t_min, double t_max, hit_record &rec)
 
   // find the nearest root that lies in the acceptable range.
   double root = (-half_b - sqrtd) / a;
-  if (root < t_min || root > t_max)
+  if (root < t_min || t_max < root)
   {
     root = (-half_b + sqrtd) / a;
     if (root < t_min || root > t_max)

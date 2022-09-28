@@ -17,6 +17,7 @@ color ray_color(ray r, hittable &world)
     return (rec.normal + color(1, 1, 1)) * 0.5;
   }
   vec3 unit_velocity = r.velocity.normalize();
+  cout << unit_velocity.x() << unit_velocity.y() << unit_velocity.z() << endl;
   double t = 0.5 * (unit_velocity.y() + 1.0);
   return color(1.0, 1.0, 1.0) * (1.0 - t) + color(0.5, 0.7, 1.0) * t;
 }
@@ -46,25 +47,25 @@ int main()
   lower_left_corner -= (vertical / 2);
   lower_left_corner -= vec3(0, 0, focal_length);
 
-  freopen("pic.ppm","w",stdout);
+  freopen("pic.ppm", "w", stdout);
   // Render
   cout << "P3\n"
        << image_width << ' ' << image_height << "\n255\n";
 
   for (int j = image_height - 1; j >= 0; --j)
   {
-    std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
+    cerr << "\rScanlines remaining: " << j << ' ' << flush;
     for (int i = 0; i < image_width; ++i)
     {
       double u = double(i) / (image_width - 1);
       double v = double(j) / (image_height - 1);
       ray r(origin, lower_left_corner + u * horizontal + v * vertical);
       color pixel_color = ray_color(r, world);
-      write_color(std::cout, pixel_color);
+      write_color(cout, pixel_color);
     }
   }
 
-  std::cerr << "\nDone.\n";
+  cerr << "\nDone.\n";
   return 0;
 }
 
