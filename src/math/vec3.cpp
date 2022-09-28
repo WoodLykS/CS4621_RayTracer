@@ -2,6 +2,8 @@
 #include "vec3.h"
 #include <cmath>
 
+using namespace std;
+
 vec3::vec3()
 {
   e[0] = 0;
@@ -18,8 +20,15 @@ vec3::vec3(double e0, double e1, double e2)
 double vec3::x() { return e[0]; }
 double vec3::y() { return e[1]; }
 double vec3::z() { return e[2]; }
+double vec3::r() { return e[0]; }
+double vec3::g() { return e[1]; }
+double vec3::b() { return e[2]; }
 
 vec3 vec3::operator-() { return vec3(-e[0], -e[1], -e[2]); }
+vec3 vec3::operator+() { return *this; }
+vec3 vec3::operator+(vec3 v) { return vec3(e[0] + v.e[0], e[1] + v.e[1], e[2] + v.e[2]); }
+vec3 vec3::operator*(double t) { return vec3(t * e[0], t * e[1], t * e[2]); }
+
 // double vec3::operator[](int i) {return e[i];}
 double &vec3::operator[](int i) { return e[i]; }
 
@@ -31,6 +40,13 @@ vec3 &vec3::operator+=(vec3 &v)
   return *this;
 }
 
+vec3 &vec3::operator-=(vec3 v)
+{
+  e[0] -= v.e[0];
+  e[1] -= v.e[1];
+  e[2] -= v.e[2];
+  return *this;
+}
 vec3 &vec3::operator*=(double t)
 {
   e[0] *= t;
@@ -44,9 +60,38 @@ vec3 &vec3::operator/=(double t)
   return *this *= 1 / t;
 }
 
+double vec3::dot(vec3 v)
+{
+  return (e[0] * v.e[0] + e[1] * v.e[1] + e[2] * v.e[2]);
+}
+
+vec3 &vec3::cross(vec3 v)
+{
+  *this = vec3(e[1] * v.e[2] - e[2] * v.e[1], e[2] * v.e[0] - e[0] * v.e[2], e[0] * v.e[1] - e[1] * v.e[0]);
+  return *this;
+}
+
+vec3 &vec3::plus(vec3 &v)
+{
+  *this = vec3(e[0] + v.e[0], e[1] + v.e[1], e[2] + v.e[2]);
+  return *this;
+}
+
+vec3 &vec3::times(double t)
+{
+  *this = vec3(e[0] * t, e[1] * t, e[2] * t);
+  return *this;
+}
+
 double vec3::norm()
 {
   return sqrt(e[0] * e[0] + e[1] * e[1] + e[2] * e[2]);
+}
+
+vec3 vec3::normalize()
+{
+  double n = norm();
+  return vec3(e[0] / n, e[1] / n, e[2] / n);
 }
 
 void vec3::normalized()
@@ -55,8 +100,54 @@ void vec3::normalized()
   *this *= 1 / n;
 }
 
-std::ostream &operator<<(std::ostream &out, vec3 &v)
+ostream &operator<<(std::ostream &out, vec3 &v)
 {
   return out << v.x() << ' ' << v.y() << ' ' << v.z();
 }
-// int main() { return 0; }
+
+istream &operator>>(std::istream &in, vec3 &v)
+{
+  double x1;
+  double x2;
+  double x3;
+  in >> x1 >> x2 >> x3;
+  v = vec3(x1, x2, x3);
+  return in;
+}
+
+inline vec3 operator+(vec3 &u, vec3 &v)
+{
+  return vec3(u.x() + v.x(), u.y() + v.y(), u.z() + v.z());
+}
+
+inline vec3 operator-(vec3 &u, vec3 &v)
+{
+  return vec3(u.x() - v.x(), u.y() - v.y(), u.z() - v.z());
+}
+
+inline vec3 operator*(double t, vec3 &v)
+{
+  return vec3(t * v.x(), t * v.y(), t * v.z());
+}
+
+// inline vec3 operator*(vec3 &v, double t)
+// {
+//   return t * v;
+// }
+
+inline vec3 operator/(vec3 v, double t)
+{
+  return (1 / t) * v;
+}
+
+inline double dot(vec3 &u, vec3 &v)
+{
+  return u.x() * v.x() + u.y() * v.y() + u.z() * v.z();
+}
+
+inline vec3 cross(vec3 &u, vec3 &v)
+{
+  return vec3(u.y() * v.z() - u.z() * v.y(),
+              u.z() * v.x() - u.x() * v.z(),
+              u.x() * v.y() - u.y() * v.x());
+}
