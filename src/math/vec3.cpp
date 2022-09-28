@@ -24,6 +24,9 @@ double vec3::b() { return e[2]; }
 
 vec3 vec3::operator-() { return vec3(-e[0], -e[1], -e[2]); }
 vec3 vec3::operator+() { return *this; }
+vec3 vec3::operator+(vec3 v) { return vec3(e[0] + v.e[0], e[1] + v.e[1], e[2] + v.e[2]); }
+vec3 vec3::operator*(double t) { return vec3(t * e[0], t * e[1], t * e[2]); }
+
 // double vec3::operator[](int i) {return e[i];}
 double &vec3::operator[](int i) { return e[i]; }
 
@@ -81,6 +84,13 @@ vec3 &vec3::times(double t)
 double vec3::norm()
 {
   return sqrt(e[0] * e[0] + e[1] * e[1] + e[2] * e[2]);
+}
+
+vec3 &vec3::normalize()
+{
+  double n = norm();
+  *this *= 1 / n;
+  return *this;
 }
 
 void vec3::normalized()
