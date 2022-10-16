@@ -4,7 +4,10 @@
 #include "math/hittablelist.h"
 #include "math/sphere.h"
 #include "math/vec3.h"
+#include "math/camera.h"
 #include <iostream>
+#include <random>
+#include <ctime>
 
 using namespace std;
 
@@ -32,6 +35,8 @@ int main()
   const double aspect_ratio = 16.0 / 9.0;
   const int image_width = 960;
   const int image_height = static_cast<int>(image_width / aspect_ratio);
+  const int samples_per_pixel = 100;
+  srand(time(NULL));
 
   // World
   hittable_list world;
@@ -39,17 +44,19 @@ int main()
   world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
 
   // Camera
-  double viewpoint_height = 2.0;
-  double viewpoint_width = aspect_ratio * viewpoint_height;
-  double focal_length = 1.0;
+  camera cam;
 
-  point3 origin = point3(0, 0, 0);
-  vec3 horizontal = vec3(viewpoint_width, 0, 0);
-  vec3 vertical = vec3(0, viewpoint_height, 0);
-  point3 lower_left_corner = origin;
-  lower_left_corner -= (horizontal / 2);
-  lower_left_corner -= (vertical / 2);
-  lower_left_corner -= vec3(0, 0, focal_length);
+  // double viewpoint_height = 2.0;
+  // double viewpoint_width = aspect_ratio * viewpoint_height;
+  // double focal_length = 1.0;
+
+  // point3 origin = point3(0, 0, 0);
+  // vec3 horizontal = vec3(viewpoint_width, 0, 0);
+  // vec3 vertical = vec3(0, viewpoint_height, 0);
+  // point3 lower_left_corner = origin;
+  // lower_left_corner -= (horizontal / 2);
+  // lower_left_corner -= (vertical / 2);
+  // lower_left_corner -= vec3(0, 0, focal_length);
 
   freopen("pic.ppm", "w", stdout);
   // Render
@@ -61,11 +68,16 @@ int main()
     cerr << "\rScanlines remaining: " << j << ' ' << flush;
     for (int i = 0; i < image_width; ++i)
     {
-      double u = double(i) / (image_width - 1);
-      double v = double(j) / (image_height - 1);
-      ray r(origin, lower_left_corner + u * horizontal + v * vertical);
-      color pixel_color = ray_color(r, world);
-      write_color(cout, pixel_color);
+      color pixel_color(0, 0, 0);
+      for (int k = 0; k < samples_per_pixel; k++)
+      {
+        double u = (i + rand()) / (image_width - 1);
+        double v = (j + rand()) / (image_height - 1);
+        ray r = cam.get_ray(u, v);
+        pixel_color += ray_color(r, world);
+      }
+      //pixel_color =
+      write_color(cout, pixel_color, samples_per_pixel);
     }
   }
 

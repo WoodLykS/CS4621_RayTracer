@@ -32,7 +32,7 @@ vec3 vec3::operator-() { return vec3(-e[0], -e[1], -e[2]); }
 // double vec3::operator[](int i) {return e[i];}
 double &vec3::operator[](int i) { return e[i]; }
 
-vec3 &vec3::operator+=(vec3 &v)
+vec3 &vec3::operator+=(vec3 v)
 {
   e[0] += v.e[0];
   e[1] += v.e[1];

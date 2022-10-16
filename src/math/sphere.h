@@ -13,7 +13,7 @@ public:
 
   sphere();
   sphere(point3 center, double rad);
-  virtual bool hit(ray r, double t_min, double t_max, hit_record &rec)override;
+  virtual bool hit(ray r, double t_min, double t_max, hit_record &rec) override;
 };
 
 #endif

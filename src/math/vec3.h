@@ -1,6 +1,7 @@
 #ifndef VEC3_H
 #define VEC3_H
 #include <iostream>
+#include <ctime>
 class vec3
 {
 private:
@@ -28,7 +29,7 @@ public:
   // Overload operators for vec3 class
 
   /* Vector Operations*/
-  vec3 &operator+=(vec3 &v);
+  vec3 &operator+=(vec3 v);
 
   vec3 &operator-=(vec3 v);
 
@@ -72,4 +73,16 @@ vec3 operator/(vec3 v, double t);
 double dot(vec3 u, vec3 v);
 vec3 cross(vec3 u, vec3 v);
 
+inline static vec3 vrandom()
+{
+  return vec3(rand(), rand(), rand());
+}
+inline static double rand_range(double lb, double hb)
+{
+  return (rand() * hb) + lb;
+}
+inline static vec3 vrandom(double lb, double hb)
+{
+  return vec3(rand_range(lb, hb), rand_range(lb, hb), rand_range(lb, hb));
+}
 #endif

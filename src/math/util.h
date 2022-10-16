@@ -4,6 +4,7 @@
 #define RAY_TRACER_UTIL_H
 
 #include <cmath>
+#include <random>
 #include <limits>
 #include <memory>
 #include <iostream>
@@ -34,4 +35,36 @@ void write_color(ostream &out, color pixel_color)
       << static_cast<int>(255.99 * pixel_color.z()) << '\n';
 }
 
+void write_color(ostream &out, color pixel_color, int samples_per_pixel)
+{
+  double r = pixel_color.x();
+  double g = pixel_color.y();
+  double b = pixel_color.z();
+  double scale = 1.0 / samples_per_pixel;
+  r *= scale;
+  g *= scale;
+  b *= scale;
+  out << static_cast<int>(255.99 * clamp(r, 0.0, 0.999)) << ' '
+      << static_cast<int>(255.99 * clamp(g, 0.0, 0.999)) << ' '
+      << static_cast<int>(255.99 * clamp(b, 0.0, 0.999)) << '\n';
+}
+
+vec3 random_in_unit_sphere()
+{
+  vec3 p = 2.0 * vec3(drand48(), drand48(), drand48()) - vec3(1, 1, 1);
+  while (p.norm() >= 1.0)
+  {
+    p = 2.0 * vec3(drand48(), drand48(), drand48()) - vec3(1, 1, 1);
+  }
+  return p;
+}
+
+double clamp(double x, double min, double max)
+{
+  if (x < min)
+    return min;
+  if (x > max)
+    return max;
+  return x;
+}
 #endif
