@@ -17,12 +17,12 @@ color ray_color(ray r, hittable &world)
     return (rec.normal + color(1, 1, 1)) * 0.5;
   }
   vec3 unit_velocity = r.velocity.normalize();
-  //cout << unit_velocity.x() << unit_velocity.y() << unit_velocity.z() << endl;
+  // cout << unit_velocity.x() << unit_velocity.y() << unit_velocity.z() << endl;
   double t = 0.5 * (unit_velocity.y() + 1.0);
   color e1 = color(1.0, 1.0, 1.0), e2 = color(0.5, 0.7, 1.0);
-  e1*=1.0 - t;
-  e2*=t;
-  e1+=e2;
+  e1 *= 1.0 - t;
+  e2 *= t;
+  e1 += e2;
   return e1;
 }
 
@@ -81,7 +81,7 @@ int main()
 //   point3 a = vec3(1, 2, 3);
 //   cout << a << endl;
 
-//   // freopen("1.ppm", "w", stdout);
+//   freopen("1.ppm", "w", stdout);
 //   //  Image
 //   const int image_width = 2;
 //   const int image_height = 2;

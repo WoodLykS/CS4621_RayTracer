@@ -25,9 +25,9 @@ double vec3::g() { return e[1]; }
 double vec3::b() { return e[2]; }
 
 vec3 vec3::operator-() { return vec3(-e[0], -e[1], -e[2]); }
-vec3 vec3::operator+() { return *this; }
-vec3 vec3::operator+(vec3 v) { return vec3(e[0] + v.e[0], e[1] + v.e[1], e[2] + v.e[2]); }
-vec3 vec3::operator*(double t) { return vec3(t * e[0], t * e[1], t * e[2]); }
+// vec3 vec3::operator+() { return *this; }
+// vec3 vec3::operator+(vec3 v) { return vec3(e[0] + v.e[0], e[1] + v.e[1], e[2] + v.e[2]); }
+// vec3 vec3::operator*(double t) { return vec3(t * e[0], t * e[1], t * e[2]); }
 
 // double vec3::operator[](int i) {return e[i];}
 double &vec3::operator[](int i) { return e[i]; }
@@ -100,12 +100,12 @@ void vec3::normalized()
   *this *= 1 / n;
 }
 
-ostream &operator<<(std::ostream &out, vec3 &v)
+ostream &operator<<(std::ostream &out, vec3 v)
 {
   return out << v.x() << ' ' << v.y() << ' ' << v.z();
 }
 
-istream &operator>>(std::istream &in, vec3 &v)
+istream &operator>>(std::istream &in, vec3 v)
 {
   double x1;
   double x2;
@@ -115,25 +115,25 @@ istream &operator>>(std::istream &in, vec3 &v)
   return in;
 }
 
-vec3 operator+(vec3 &u, vec3 &v)
+vec3 operator+(vec3 u, vec3 v)
 {
   return vec3(u.x() + v.x(), u.y() + v.y(), u.z() + v.z());
 }
 
-vec3 operator-(vec3 &u, vec3 &v)
+vec3 operator-(vec3 u, vec3 v)
 {
   return vec3(u.x() - v.x(), u.y() - v.y(), u.z() - v.z());
 }
 
-vec3 operator*(double t, vec3 &v)
+vec3 operator*(double t, vec3 v)
 {
   return vec3(t * v.x(), t * v.y(), t * v.z());
 }
 
-// inline vec3 operator*(vec3 &v, double t)
-// {
-//   return t * v;
-// }
+vec3 operator*(vec3 v, double t)
+{
+  return t * v;
+}
 
 vec3 operator/(vec3 v, double t)
 {
