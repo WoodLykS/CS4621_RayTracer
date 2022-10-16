@@ -16,8 +16,10 @@ int main()
   point3 a = vec3(1, 2, 3);
   point3 b = vec3(1, 2, 3);
   // point3 b = vec3(3, 1, 3);
-  //point3 tmp = a + b;
-  cout << (a - b) + vec3(1,0,1)*10 << endl;
+  // point3 tmp = a + b;
+  a += b;
+  a += b;
+  cout << a << endl;
   cout << dot(a, b) << endl;
   cout << a << endl;
   a -= b;

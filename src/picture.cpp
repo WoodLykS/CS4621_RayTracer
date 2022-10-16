@@ -59,6 +59,7 @@ int main()
   // lower_left_corner -= vec3(0, 0, focal_length);
 
   freopen("pic.ppm", "w", stdout);
+
   // Render
   cout << "P3\n"
        << image_width << ' ' << image_height << "\n255\n";
@@ -71,8 +72,8 @@ int main()
       color pixel_color(0, 0, 0);
       for (int k = 0; k < samples_per_pixel; k++)
       {
-        double u = (i + rand()) / (image_width - 1);
-        double v = (j + rand()) / (image_height - 1);
+        double u = (i + rand_unit()) / (image_width - 1);
+        double v = (j + rand_unit()) / (image_height - 1);
         ray r = cam.get_ray(u, v);
         pixel_color += ray_color(r, world);
       }
