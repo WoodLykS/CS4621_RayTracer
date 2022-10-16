@@ -8,8 +8,8 @@ class material
 public:
   bool diffuse = false;
   bool metal = false;
-  virtual bool scatter(ray &r_in, hit_record &rec,
-                       vec3 &attenuation, ray &scattered) = 0;
+  // virtual bool scatter(ray &r_in, hit_record &rec,
+  //                      vec3 &attenuation, ray &scattered) = 0;
 };
 
 struct hit_record

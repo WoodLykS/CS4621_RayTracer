@@ -76,7 +76,7 @@ int main()
         ray r = cam.get_ray(u, v);
         pixel_color += ray_color(r, world);
       }
-      //pixel_color =
+      // pixel_color =
       write_color(cout, pixel_color, samples_per_pixel);
     }
   }

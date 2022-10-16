@@ -21,6 +21,15 @@ using namespace std;
 const double infinity = numeric_limits<double>::infinity();
 const double pi = 3.1415926535897932385;
 
+double clamp(double x, double min, double max)
+{
+  if (x < min)
+    return min;
+  if (x > max)
+    return max;
+  return x;
+}
+
 inline double degrees_to_radians(double degrees)
 {
   return degrees * pi / 180.0;
@@ -29,7 +38,7 @@ inline double degrees_to_radians(double degrees)
 // this helper map a decimal to rgb value
 void write_color(ostream &out, color pixel_color)
 {
-  //cout<<pixel_color.x();
+  // cout<<pixel_color.x();
   out << static_cast<int>(255.99 * pixel_color.x()) << ' '
       << static_cast<int>(255.99 * pixel_color.y()) << ' '
       << static_cast<int>(255.99 * pixel_color.z()) << '\n';
@@ -57,14 +66,5 @@ vec3 random_in_unit_sphere()
     p = 2.0 * vec3(drand48(), drand48(), drand48()) - vec3(1, 1, 1);
   }
   return p;
-}
-
-double clamp(double x, double min, double max)
-{
-  if (x < min)
-    return min;
-  if (x > max)
-    return max;
-  return x;
 }
 #endif
