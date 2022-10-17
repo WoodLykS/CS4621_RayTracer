@@ -8,7 +8,7 @@
 #include "math/hittablelist.h"
 #include "math/sphere.h"
 #include "math/vec3.h"
-#include "math/camera.h"
+#include "render/camera.h"
 #include <iostream>
 #include <random>
 #include <ctime>

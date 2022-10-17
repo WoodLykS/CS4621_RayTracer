@@ -30,6 +30,12 @@ picture: clean sphere.o hittablelist.o ray.o vec3.o
 
 render: clean hittablelist.o ray.o vec3.o
 	${CC} -o render.out src/render.cpp $(shell find . -name "*.o")
+	./render.out
+
+random: clean hittablelist.o ray.o vec3.o
+	${CC} -o random.out src/random.cpp $(shell find . -name "*.o")
+	./random.out
+
 
 test: clean vec3.o ray.o
 	${CC} -o test.out src/test.cpp $(shell find . -name "*.o") 
