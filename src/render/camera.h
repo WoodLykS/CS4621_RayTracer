@@ -17,10 +17,10 @@ private:
 
 public:
   camera(point3 lookfrom, point3 lookat, vec3 vup, double vfov,
-         double aspect_ratio)
+         double aspect_ratio, double aperture, double focus_dist)
   {
-    double aperture = 2.0;
-    double focus_dist = (lookfrom - lookat).norm();
+    // double aperture = 2.0;
+    // double focus_dist = (lookfrom - lookat).norm();
 
     double theta = degrees_to_radians(vfov);
     double h = tan(theta / 2);
@@ -51,7 +51,7 @@ public:
 
   ray get_ray(double u1, double v1)
   {
-    //return ray(origin, lower_left_corner + u1 * horizontal + v1 * vertical - origin);
+    // return ray(origin, lower_left_corner + u1 * horizontal + v1 * vertical - origin);
 
     vec3 rd = lens_radius * random_in_unit_disk();
     vec3 offset = u * rd.x() + v * rd.y();

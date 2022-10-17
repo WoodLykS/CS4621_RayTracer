@@ -50,7 +50,7 @@ int main()
   world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
 
   camera cam(point3(3, 3, 2), point3(0, 0, -1), vec3(0, 1, 0), 20.0,
-             aspect_ratio);
+             aspect_ratio, 0.1, 10);
 
   freopen("render.ppm", "w", stdout);
 
