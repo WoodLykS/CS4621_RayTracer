@@ -54,6 +54,8 @@ public:
   /**Normalize current vector*/
   void normalized();
 
+  double length_sqaure();
+
   bool near_zero();
 };
 
@@ -74,4 +76,7 @@ vec3 operator/(vec3 v, double t);
 
 double dot(vec3 u, vec3 v);
 vec3 cross(vec3 u, vec3 v);
+
+vec3 refract(vec3 uv, vec3 n, double etai_over_etat);
+vec3 reflect(vec3 v, vec3 n);
 #endif

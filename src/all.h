@@ -14,5 +14,6 @@
 #include <ctime>
 #include <memory>
 #include "render/metal.h"
+#include "render/dielectric.h"
 
 #endif

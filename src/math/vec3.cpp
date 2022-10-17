@@ -88,6 +88,11 @@ double vec3::norm()
   return sqrt(e[0] * e[0] + e[1] * e[1] + e[2] * e[2]);
 }
 
+double vec3::length_sqaure()
+{
+  return e[0] * e[0] + e[1] * e[1] + e[2] * e[2];
+}
+
 vec3 vec3::normalize()
 {
   double n = norm();
@@ -161,4 +166,17 @@ vec3 cross(vec3 u, vec3 v)
   return vec3(u.y() * v.z() - u.z() * v.y(),
               u.z() * v.x() - u.x() * v.z(),
               u.x() * v.y() - u.y() * v.x());
+}
+
+vec3 refract(vec3 uv, vec3 n, double etai_over_etat)
+{
+  double cos_theta = fmin(dot(-uv, n), 1.0);
+  vec3 r_out_perp = etai_over_etat * (uv + cos_theta * n);
+  vec3 r_out_parallel = -sqrt(fabs(1.0 - r_out_perp.length_sqaure())) * n;
+  return r_out_perp + r_out_parallel;
+}
+
+vec3 reflect(vec3 v, vec3 n)
+{
+  return v - 2 * dot(v, n) * n;
 }

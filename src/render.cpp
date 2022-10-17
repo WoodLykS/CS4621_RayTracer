@@ -37,18 +37,36 @@ int main()
   // World
   hittable_list world;
 
-  Material_L material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
+  //  Material_L material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
+  //Material_D material_center = make_shared<dielectric>(1.5);
+  // Material_D material_left = make_shared<dielectric>(1.5);
   Material_L material_center = make_shared<lambertian>(color(0.7, 0.3, 0.3));
-  Material_M material_left = make_shared<metal>(color(0.8, 0.8, 0.8));
-  Material_M material_right = make_shared<metal>(color(0.8, 0.6, 0.2));
+  // // Material_M material_left = make_shared<metal>(color(0.8, 0.8, 0.8), 0.3);
+  // Material_M material_right = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
 
-  world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
+  //world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 5.0, material_ground));
   world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, material_center));
-  world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, material_left));
-  world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), -0.45, material_left));
-  world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
+  // world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, material_left));
+  // world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), -0.45, material_left));
+  // world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
+
+  camera cam(point3(0, 0, 0), point3(0, 0, -1), vec3(0, 1, 0), 90, aspect_ratio);
+
+  // Material_L material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
+  // //Material_D material_center = make_shared<dielectric>(1.5);
+  // Material_D material_left = make_shared<dielectric>(1.5);
+  // Material_L material_center = make_shared<lambertian>(color(0.7, 0.3, 0.3));
+  // // Material_M material_left = make_shared<metal>(color(0.8, 0.8, 0.8), 0.3);
+  // Material_M material_right = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
+
+  // world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
+  // world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, material_center));
+  // world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, material_left));
+  // world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), -0.4, material_left));
+  // world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
   // Camera
-  camera cam(point3(-2, 2, 1), point3(0, 0, -1), vec3(0, 1, 0), 90, aspect_ratio);
+  //camera cam;
+  // camera cam(point3(0, 0, 0), point3(0, 0, -1), vec3(0, 1, 0), 90, aspect_ratio);
 
   freopen("render.ppm", "w", stdout);
 

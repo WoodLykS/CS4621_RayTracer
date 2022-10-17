@@ -34,9 +34,9 @@ sphere::sphere(point3 cen, double rad, shared_ptr<material> m)
 bool sphere::hit(ray r, double t_min, double t_max, hit_record &rec)
 {
   vec3 oc = r.origin - center;
-  double a = pow(r.velocity.norm(), 2);
+  double a = r.velocity.length_sqaure();
   double half_b = dot(oc, r.velocity);
-  double c = pow(oc.norm(), 2) - pow(radius, 2);
+  double c = oc.length_sqaure() - radius * radius;
 
   double discriminant = half_b * half_b - a * c;
   // if there is no root

@@ -12,6 +12,8 @@ class camera
   vec3 vertical;
 
 public:
+  // camera()
+  // {
   camera(point3 lookfrom, point3 lookat, vec3 vup, double vfov, double aspect_ratio)
   {
 
@@ -30,6 +32,7 @@ public:
     horizontal = viewport_width * u;
     vertical = viewport_height * v;
     lower_left_corner = origin - horizontal / 2 - vertical / 2 - w;
+
     // double aspect_ratio = 16.0 / 9.0;
     // double viewport_height = 2.0;
     // double viewport_width = aspect_ratio * viewport_height;
