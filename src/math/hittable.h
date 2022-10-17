@@ -12,6 +12,7 @@ struct hit_record
   // we assume it points "out"
   vec3 normal;
   double t;
+  double u, v;
   // if the ray and the normal face in the same direction,
   // the ray is inside the object; otherwise, outsside
   bool front_face;

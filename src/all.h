@@ -15,5 +15,7 @@
 #include <memory>
 #include "render/metal.h"
 #include "render/dielectric.h"
+#include "math/rect.h"
+#include "math/box.h"
 
 #endif
