@@ -90,7 +90,8 @@ int main()
   srand(time(NULL));
 
   hittable_list world = random_scene();
-  camera cam(point3(13, 2, 3), point3(0, 0, 0), vec3(0, 1, 0), 30, aspect_ratio);
+  camera cam(point3(13, 2, 3), point3(0, 0, 0), vec3(0, 1, 0), 30,
+             aspect_ratio, 0.1, 10);
 
   freopen("random.ppm", "w", stdout);
   // Render
