@@ -101,7 +101,7 @@ int main(int argc, char **argv)
   }
 
   // Save result to a PPM image (keep these flags if you compile under Windows)
-  std::ofstream ofs("./out.ppm", std::ios::out | std::ios::binary);
+  std::ofstream ofs("./triangle.ppm", std::ios::out | std::ios::binary);
   ofs << "P6\n"
       << width << " " << height << "\n255\n";
   for (uint32_t i = 0; i < height * width; ++i)

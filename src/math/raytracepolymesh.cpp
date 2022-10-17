@@ -22,7 +22,8 @@
 
 static const float kInfinity = std::numeric_limits<float>::max();
 static const float kEpsilon = 1e-8;
-static const Vec3f kDefaultBackgroundColor = Vec3f(0.235294, 0.67451, 0.843137);
+// static const Vec3f kDefaultBackgroundColor = Vec3f(0.235294, 0.67451, 0.843137);
+static const Vec3f kDefaultBackgroundColor = Vec3f(0, 0, 0);
 
 inline float clamp(const float &lo, const float &hi, const float &v)
 {
@@ -420,7 +421,7 @@ void render(
 
   // save framebuffer to file
   char buff[256];
-  sprintf(buff, "out.%04d.ppm", frame);
+  sprintf(buff, "polymesh.ppm", frame);
   std::ofstream ofs;
   ofs.open(buff);
   ofs << "P6\n"
@@ -439,10 +440,10 @@ int main(int argc, char **argv)
 {
   // setting up options
   Options options;
-  // options.cameraToWorld[3][2] = 10;
-  Matrix44f tmp = Matrix44f(0.707107, -0.331295, 0.624695, 0, 0, 0.883452, 0.468521, 0, -0.707107, -0.331295, 0.624695, 0, -1.63871, -5.747777, -40.400412, 1);
-  options.cameraToWorld = tmp.inverse();
-  options.fov = 50.0393;
+  options.cameraToWorld[3][2] = 10;
+  // Matrix44f tmp = Matrix44f(0.707107, -0.331295, 0.624695, 0, 0, 0.883452, 0.468521, 0, -0.707107, -0.331295, 0.624695, 0, -1.63871, -5.747777, -40.400412, 1);
+  // options.cameraToWorld = tmp.inverse();
+  options.fov = 25.0393;
   // #if 1
   //   std::vector<std::unique_ptr<Object>> objects;
   //   TriangleMesh *mesh = loadPolyMeshFromFile("./cow.geo");
