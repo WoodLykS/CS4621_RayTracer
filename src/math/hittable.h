@@ -1,17 +1,10 @@
 #ifndef HITTABLE_H
 #define HITTABLE_H
-
+#include <memory>
 #include "ray.h"
+//#include "../render/material.h"
 
-class material
-{
-public:
-  bool diffuse = false;
-  bool metal = false;
-  // virtual bool scatter(ray &r_in, hit_record &rec,
-  //                      vec3 &attenuation, ray &scattered) = 0;
-};
-
+class material;
 struct hit_record
 {
   point3 p;
@@ -22,6 +15,7 @@ struct hit_record
   // if the ray and the normal face in the same direction,
   // the ray is inside the object; otherwise, outsside
   bool front_face;
+  std::shared_ptr<material> mat_ptr;
 
   inline void set_face_normal(ray r, vec3 outward_normal)
   {

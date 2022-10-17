@@ -100,6 +100,12 @@ void vec3::normalized()
   *this *= 1 / n;
 }
 
+bool vec3::near_zero()
+{
+  double eps = 1e-8;
+  return (x() < eps) && (y() < eps) && (z() < eps);
+}
+
 ostream &operator<<(std::ostream &out, vec3 v)
 {
   return out << v.x() << ' ' << v.y() << ' ' << v.z();
@@ -138,6 +144,11 @@ vec3 operator*(vec3 v, double t)
 vec3 operator/(vec3 v, double t)
 {
   return (1 / t) * v;
+}
+
+vec3 operator*(vec3 u, vec3 v)
+{
+  return vec3(u.x() * v.x(), u.y() * v.y(), u.z() * v.z());
 }
 
 double dot(vec3 u, vec3 v)

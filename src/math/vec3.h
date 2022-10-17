@@ -53,6 +53,8 @@ public:
 
   /**Normalize current vector*/
   void normalized();
+
+  bool near_zero();
 };
 
 // Type aliases for vec3
@@ -67,10 +69,9 @@ vec3 operator-(vec3 u, vec3 v);
 
 vec3 operator*(double t, vec3 v);
 vec3 operator*(vec3 v, double t);
-
+vec3 operator*(vec3 u, vec3 v);
 vec3 operator/(vec3 v, double t);
 
 double dot(vec3 u, vec3 v);
 vec3 cross(vec3 u, vec3 v);
-
 #endif
