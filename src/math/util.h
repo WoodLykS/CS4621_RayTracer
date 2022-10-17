@@ -39,6 +39,17 @@ inline static vec3 vrandom(double lb, double hb)
   return vec3(rand_range(lb, hb), rand_range(lb, hb), rand_range(lb, hb));
 }
 
+inline static vec3 random_in_unit_disk()
+{
+  while (true)
+  {
+    vec3 p = vec3(rand_range(-1, 1), rand_range(-1, 1), 0);
+    if (p.length_sqaure() >= 1)
+      continue;
+    return p;
+  }
+}
+
 double clamp(double x, double min, double max)
 {
   if (x < min)

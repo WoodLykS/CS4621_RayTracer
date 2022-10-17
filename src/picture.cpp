@@ -4,10 +4,10 @@
 #include "math/hittablelist.h"
 #include "math/sphere.h"
 #include "math/vec3.h"
-#include "math/camera.h"
 #include <iostream>
 #include <random>
 #include <ctime>
+#include "render/camera.h"
 
 using namespace std;
 
