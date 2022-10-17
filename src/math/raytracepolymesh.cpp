@@ -14,8 +14,8 @@
 #include <algorithm>
 
 //#include "geometry.h"
-#include "vec3.h"
-#include "util.h"
+//#include "vec3.h"
+//#include "util.h"
 #include "vec3i.h"
 #include "vec2.h"
 #include "matrix44.h"
