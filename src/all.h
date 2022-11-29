@@ -20,5 +20,6 @@
 #include "math/rect.h"
 #include "math/box.h"
 #include "render/light.h"
+#include "render/scene.h"
 
 #endif

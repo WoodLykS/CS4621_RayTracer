@@ -3,18 +3,41 @@
 using namespace std;
 
 const double aspect_ratio = 16.0 / 9.0;
-const int image_width = 400;
+const int image_width = 1080;
 const int image_height = static_cast<int>(image_width / aspect_ratio);
-const int samples_per_pixel = 1440;
+const int samples_per_pixel = 50;
 const int max_depth = 50;
-hittable_list world;
+const color BACKGROUND = color(0.4, 0.4, 0.4);
+hittable_list world = GET_random_scene();
 camera cam(point3(3, 3, 2), point3(0, 0, -1), vec3(0, 1, 0), 20.0,
            aspect_ratio, 0.1, 10);
 vec3 pixels[image_height][image_width];
 thread threadBank[image_height][image_width];
-vector<thread> v[image_height + 1];
+// vector<thread> v[image_height + 1];
 // vertical linear color interpolation aka lerp
-color ray_color(ray &r, hittable &world, int depth)
+// color ray_color(ray &r, hittable &world, int depth)
+// {
+//   hit_record rec;
+
+//   // If we've exceeded the ray bounce limit, no more light is gathered.
+//   if (depth <= 0)
+//     return color(0, 0, 0);
+
+//   if (world.hit(r, 0.001, infinity, rec))
+//   {
+//     ray scattered;
+//     color attenuation;
+//     if (rec.mat_ptr->scatter(r, rec, attenuation, scattered))
+//       return attenuation * ray_color(scattered, world, depth - 1);
+//     return color(0, 0, 0);
+//   }
+
+//   vec3 unit_direction = r.velocity.normalize();
+//   int t = 0.5 * (unit_direction.y() + 1.0);
+//   return (1.0 - t) * color(1.0, 1.0, 1.0) + t * color(0.5, 0.7, 1.0);
+// }
+
+color ray_color(ray &r, color background, hittable &world, int depth)
 {
   hit_record rec;
 
@@ -22,20 +45,19 @@ color ray_color(ray &r, hittable &world, int depth)
   if (depth <= 0)
     return color(0, 0, 0);
 
-  if (world.hit(r, 0.001, infinity, rec))
-  {
-    ray scattered;
-    color attenuation;
-    if (rec.mat_ptr->scatter(r, rec, attenuation, scattered))
-      return attenuation * ray_color(scattered, world, depth - 1);
-    return color(0, 0, 0);
-  }
+  // If the ray hits nothing, return the background color.
+  if (!world.hit(r, 0.001, infinity, rec))
+    return background;
 
-  vec3 unit_direction = r.velocity.normalize();
-  int t = 0.5 * (unit_direction.y() + 1.0);
-  return (1.0 - t) * color(1.0, 1.0, 1.0) + t * color(0.5, 0.7, 1.0);
+  ray scattered;
+  color attenuation;
+  color emitted = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
+
+  if (!rec.mat_ptr->scatter(r, rec, attenuation, scattered))
+    return emitted;
+
+  return emitted + attenuation * ray_color(scattered, background, world, depth - 1);
 }
-
 // pixels should be an array of array of color/vec3
 void new_write_color(ostream &out)
 {
@@ -55,8 +77,9 @@ color current_pixel;
 void add_color(double u, double v)
 {
   ray r = cam.get_ray(u, v);
-  current_pixel += ray_color(r, world, max_depth);
+  current_pixel += ray_color(r, BACKGROUND, world, max_depth);
 }
+
 color one_pixel_multisample(int i, int j)
 {
   // cerr << "*" << i << " " << j << endl;
@@ -75,24 +98,36 @@ color one_pixel_multisample(int i, int j)
   return current_pixel;
 }
 
+vec3 pixel[image_width + 1];
+void render_pixel(int i, int j)
+{
+  for (int k = 0; k < samples_per_pixel; k++)
+  {
+    double u = (i + rand_unit()) / (image_width - 1);
+    double v = (j + rand_unit()) / (image_height - 1);
+    ray r = cam.get_ray(u, v);
+    pixel[i] += ray_color(r, BACKGROUND, world, max_depth);
+  }
+}
+
+void render_line(int j)
+{
+  vector<thread> q;
+
+  for (int i = 0; i < image_width; ++i)
+  {
+    pixel[i] = vec3(0, 0, 0);
+    q.emplace_back(render_pixel, i, j);
+  }
+  for (int i = 0; i < image_width; ++i)
+  {
+    q[i].join();
+    write_color(cout, pixel[i], samples_per_pixel);
+  }
+}
 int main()
 {
-  // Image
-
   srand(time(NULL));
-  // World
-
-  Material_L material_ground = make_shared<lambertian>(color(0.5, 0.5, 0.5));
-  Material_L material_center = make_shared<lambertian>(color(0.1, 0.2, 0.5));
-  Material_D material_left = make_shared<dielectric>(1.5);
-  Material_M material_right = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
-
-  world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
-  world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, material_center));
-  world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, material_left));
-  world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), -0.45, material_left));
-  world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
-
   freopen("render.ppm", "w", stdout);
 
   // Render
@@ -102,14 +137,7 @@ int main()
   for (int j = image_height - 1; j >= 0; --j)
   {
     cerr << "\rScanlines remaining: " << j << ' ' << flush;
-    for (int i = 0; i < image_width; ++i)
-    {
-      // cerr << i << " " << j << endl;
-      // // thread t(one_pixel, i, j, cam, world);
-      // v[j].emplace_back(one_pixel, i, j);
-      color p = one_pixel_multisample(i, j);
-      write_color(cout, p, samples_per_pixel);
-    }
+    render_line(j);
   }
   // new_write_color(cout);
 
