@@ -35,8 +35,9 @@ bvh_node ::bvh_node(aabb box, bvh_node r, bvh_node l)
   left = l;
 }
 
-bool bvh_node ::hit(ray r, hit_record rec)
+bool bvh_node ::hit(ray r, float t_min, float t_max, hit_record rec)
 {
-  return false;
+  if (not bbox.hit(r, ))
+    return false;
 }
 #endif

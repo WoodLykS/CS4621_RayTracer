@@ -75,6 +75,8 @@ void write_color(ostream &out, color pixel_color)
       << static_cast<int>(255.99 * pixel_color.z()) << '\n';
 }
 
+
+
 void write_color(ostream &out, color pixel_color, int samples_per_pixel)
 {
   double r = pixel_color.x();
