@@ -5,8 +5,16 @@
 #include "metal.h"
 #include "lambertian.h"
 #include "dielectric.h"
+#include "camera.h"
 
-hittable_list GET_SCENE_1()
+struct SCENE
+{
+  hittable_list world;
+  camera cam;
+};
+
+SCENE
+GET_SCENE_1(double aspect_ratio)
 {
   hittable_list world;
   Material_L material_ground = make_shared<lambertian>(color(0.5, 0.5, 0.5));
@@ -18,10 +26,13 @@ hittable_list GET_SCENE_1()
   world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, material_left));
   world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), -0.45, material_left));
   world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
-  return world;
+  camera cam(point3(3, 3, 2), point3(0, 0, -1), vec3(0, 1, 0), 20.0,
+             aspect_ratio, 0.1, 10);
+
+  return SCENE{world, cam};
 }
 
-hittable_list GET_SCENE_random()
+SCENE GET_SCENE_random(double aspect_ratio)
 {
   hittable_list world;
 
@@ -104,6 +115,8 @@ hittable_list GET_SCENE_random()
 
   auto material8 = make_shared<metal>(color(1, 1, 1), 0.2);
   world.add(make_shared<sphere>(point3(-2, 1, 3), 1.0, material8));
-  return world;
+  camera cam(point3(13, 2, 4), point3(0, 0, 0), vec3(0, 1, 0), 50,
+             aspect_ratio, 0, 20);
+  return SCENE{world, cam};
 }
 #endif

@@ -33,9 +33,9 @@ int main()
   const int max_depth = 50;
   srand(time(NULL));
 
-  hittable_list world = GET_SCENE_1();
-  camera cam(point3(13, 2, 4), point3(0, 0, 0), vec3(0, 1, 0), 50,
-             aspect_ratio, 0, 20);
+  SCENE scene = GET_SCENE_random(aspect_ratio);
+  hittable_list world = scene.world;
+  camera cam = scene.cam;
 
   freopen("random.ppm", "w", stdout);
   // Render
