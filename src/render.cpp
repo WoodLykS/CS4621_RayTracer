@@ -1,11 +1,11 @@
 #include "all.h"
-
+#include <time.h>
 using namespace std;
 
 const double aspect_ratio = 16.0 / 9.0;
-const int image_width = 1080;
+const int image_width = 400;
 const int image_height = static_cast<int>(image_width / aspect_ratio);
-const int samples_per_pixel = 50;
+const int samples_per_pixel = 100;
 const int max_depth = 50;
 const color BACKGROUND = color(0.4, 0.4, 0.4);
 SCENE scene = GET_SCENE_random(aspect_ratio);
@@ -140,7 +140,9 @@ int main()
     render_line(j);
   }
   // new_write_color(cout);
-
   cerr << "\nDone.\n";
+  auto t2 = chrono::high_resolution_clock::now();
+  chrono::duration<double, std::milli> ms_double = t2 - t1;
+  cerr << ms_double.count() / 1000 << endl;
   return 0;
 }
