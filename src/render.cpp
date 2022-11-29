@@ -8,9 +8,9 @@ const int image_height = static_cast<int>(image_width / aspect_ratio);
 const int samples_per_pixel = 50;
 const int max_depth = 50;
 const color BACKGROUND = color(0.4, 0.4, 0.4);
-hittable_list world = GET_random_scene();
-camera cam(point3(3, 3, 2), point3(0, 0, -1), vec3(0, 1, 0), 20.0,
-           aspect_ratio, 0.1, 10);
+SCENE scene = GET_SCENE_random(aspect_ratio);
+hittable_list world = scene.world;
+camera cam = scene.cam;
 vec3 pixels[image_height][image_width];
 thread threadBank[image_height][image_width];
 // vector<thread> v[image_height + 1];
