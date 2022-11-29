@@ -34,14 +34,14 @@ sphere::sphere(point3 cen, double rad, shared_ptr<material> m)
   mat_ptr = m;
 }
 
-void sphere::bbox()
-{
-  point3 v1 = vec3(center.x() - radius,
-                   center.y() - radius, center.z() - radius);
-  point3 v2 = vec3(center.x() + radius,
-                   center.y() + radius, center.z() + radius);
-  hittable_list lst return aabb(v1, v2，);
-}
+// void sphere::bbox()
+// {
+//   point3 v1 = vec3(center.x() - radius,
+//                    center.y() - radius, center.z() - radius);
+//   point3 v2 = vec3(center.x() + radius,
+//                    center.y() + radius, center.z() + radius);
+//   hittable_list lst return aabb(v1, v2);
+// }
 
 bool sphere::hit(ray r, double t_min, double t_max, hit_record &rec)
 {

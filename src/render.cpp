@@ -5,14 +5,14 @@ using namespace std;
 const double aspect_ratio = 16.0 / 9.0;
 const int image_width = 400;
 const int image_height = static_cast<int>(image_width / aspect_ratio);
-const int samples_per_pixel = 1;
+const int samples_per_pixel = 1440;
 const int max_depth = 50;
 hittable_list world;
 camera cam(point3(3, 3, 2), point3(0, 0, -1), vec3(0, 1, 0), 20.0,
            aspect_ratio, 0.1, 10);
 vec3 pixels[image_height][image_width];
 thread threadBank[image_height][image_width];
-vector<thread> v[image_height];
+vector<thread> v[image_height + 1];
 // vertical linear color interpolation aka lerp
 color ray_color(ray &r, hittable &world, int depth)
 {
@@ -43,7 +43,7 @@ void new_write_color(ostream &out)
   {
     for (int j = 0; j < image_width; j++)
     {
-      v[i][j].join();
+      // v[i][j].join();
       out << static_cast<int>(255.99 * pixels[i][j].x()) << ' '
           << static_cast<int>(255.99 * pixels[i][j].y()) << ' '
           << static_cast<int>(255.99 * pixels[i][j].z()) << '\n';
@@ -51,17 +51,28 @@ void new_write_color(ostream &out)
   }
 }
 
-void one_pixel(int i, int j)
+color current_pixel;
+void add_color(double u, double v)
 {
-  color pixel_color(0, 0, 0);
+  ray r = cam.get_ray(u, v);
+  current_pixel += ray_color(r, world, max_depth);
+}
+color one_pixel_multisample(int i, int j)
+{
+  // cerr << "*" << i << " " << j << endl;
+  current_pixel = color(0, 0, 0);
+  vector<thread> thread_queue;
   for (int k = 0; k < samples_per_pixel; k++)
   {
     double u = (i + rand_unit()) / (image_width - 1);
     double v = (j + rand_unit()) / (image_height - 1);
-    ray r = cam.get_ray(u, v);
-    pixel_color += ray_color(r, world, max_depth);
+    thread_queue.emplace_back(add_color, u, v);
   }
-  pixels[i][j] = pixel_color;
+  for (int k = 0; k < samples_per_pixel; k++)
+  {
+    thread_queue[k].join();
+  }
+  return current_pixel;
 }
 
 int main()
@@ -93,12 +104,14 @@ int main()
     cerr << "\rScanlines remaining: " << j << ' ' << flush;
     for (int i = 0; i < image_width; ++i)
     {
-      // thread t(one_pixel, i, j, cam, world);
-      v[j].emplace_back(one_pixel, i, j);
+      // cerr << i << " " << j << endl;
+      // // thread t(one_pixel, i, j, cam, world);
+      // v[j].emplace_back(one_pixel, i, j);
+      color p = one_pixel_multisample(i, j);
+      write_color(cout, p, samples_per_pixel);
     }
   }
-
-  new_write_color(cout);
+  // new_write_color(cout);
 
   cerr << "\nDone.\n";
   return 0;
