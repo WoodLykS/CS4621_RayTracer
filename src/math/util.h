@@ -10,6 +10,8 @@
 #include <iostream>
 #include "ray.h"
 #include "vec3.h"
+#include <thread>
+#include <vector>
 
 /*
 using std::shared_ptr;

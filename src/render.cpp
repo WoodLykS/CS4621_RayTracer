@@ -2,6 +2,17 @@
 
 using namespace std;
 
+const double aspect_ratio = 16.0 / 9.0;
+const int image_width = 400;
+const int image_height = static_cast<int>(image_width / aspect_ratio);
+const int samples_per_pixel = 1;
+const int max_depth = 50;
+hittable_list world;
+camera cam(point3(3, 3, 2), point3(0, 0, -1), vec3(0, 1, 0), 20.0,
+           aspect_ratio, 0.1, 10);
+vec3 pixels[image_height][image_width];
+thread threadBank[image_height][image_width];
+vector<thread> v[image_height];
 // vertical linear color interpolation aka lerp
 color ray_color(ray &r, hittable &world, int depth)
 {
@@ -25,18 +36,40 @@ color ray_color(ray &r, hittable &world, int depth)
   return (1.0 - t) * color(1.0, 1.0, 1.0) + t * color(0.5, 0.7, 1.0);
 }
 
+// pixels should be an array of array of color/vec3
+void new_write_color(ostream &out)
+{
+  for (int i = 0; i < image_height; i++)
+  {
+    for (int j = 0; j < image_width; j++)
+    {
+      v[i][j].join();
+      out << static_cast<int>(255.99 * pixels[i][j].x()) << ' '
+          << static_cast<int>(255.99 * pixels[i][j].y()) << ' '
+          << static_cast<int>(255.99 * pixels[i][j].z()) << '\n';
+    }
+  }
+}
+
+void one_pixel(int i, int j)
+{
+  color pixel_color(0, 0, 0);
+  for (int k = 0; k < samples_per_pixel; k++)
+  {
+    double u = (i + rand_unit()) / (image_width - 1);
+    double v = (j + rand_unit()) / (image_height - 1);
+    ray r = cam.get_ray(u, v);
+    pixel_color += ray_color(r, world, max_depth);
+  }
+  pixels[i][j] = pixel_color;
+}
+
 int main()
 {
   // Image
-  const double aspect_ratio = 16.0 / 9.0;
-  const int image_width = 400;
-  const int image_height = static_cast<int>(image_width / aspect_ratio);
-  const int samples_per_pixel = 100;
-  const int max_depth = 50;
-  srand(time(NULL));
 
+  srand(time(NULL));
   // World
-  hittable_list world;
 
   Material_L material_ground = make_shared<lambertian>(color(0.5, 0.5, 0.5));
   Material_L material_center = make_shared<lambertian>(color(0.1, 0.2, 0.5));
@@ -49,9 +82,6 @@ int main()
   world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), -0.45, material_left));
   world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
 
-  camera cam(point3(3, 3, 2), point3(0, 0, -1), vec3(0, 1, 0), 20.0,
-             aspect_ratio, 0.1, 10);
-
   freopen("render.ppm", "w", stdout);
 
   // Render
@@ -63,18 +93,12 @@ int main()
     cerr << "\rScanlines remaining: " << j << ' ' << flush;
     for (int i = 0; i < image_width; ++i)
     {
-      color pixel_color(0, 0, 0);
-      for (int k = 0; k < samples_per_pixel; k++)
-      {
-        double u = (i + rand_unit()) / (image_width - 1);
-        double v = (j + rand_unit()) / (image_height - 1);
-        ray r = cam.get_ray(u, v);
-        pixel_color += ray_color(r, world, max_depth);
-      }
-      // pixel_color =
-      write_color(cout, pixel_color, samples_per_pixel);
+      // thread t(one_pixel, i, j, cam, world);
+      v[j].emplace_back(one_pixel, i, j);
     }
   }
+
+  new_write_color(cout);
 
   cerr << "\nDone.\n";
   return 0;

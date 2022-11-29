@@ -13,6 +13,8 @@
 #include <random>
 #include <ctime>
 #include <memory>
+#include <vector>
+#include <thread>
 #include "render/metal.h"
 #include "render/dielectric.h"
 #include "math/rect.h"
