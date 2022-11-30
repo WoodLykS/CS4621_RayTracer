@@ -12,7 +12,7 @@ public:
   box(point3 p0, point3 p1, shared_ptr<material> ptr);
 
   virtual bool hit(ray r, double t_min, double t_max, hit_record &rec) override;
-  virtual bool bounding_box(double t_min, double t_max, aabb &output_box) override;
+  virtual bool bounding_box(aabb &output_box) override;
 
 public:
   point3 box_min;
@@ -40,7 +40,7 @@ bool box::hit(ray r, double t_min, double t_max, hit_record &rec)
   return sides.hit(r, t_min, t_max, rec);
 }
 
-bool box::bounding_box(double t_min, double t_max, aabb &output_box)
+bool box::bounding_box(aabb &output_box)
 {
   output_box = aabb(box_min, box_max);
   return true;

@@ -6,7 +6,6 @@
 #include <memory>
 #include <vector>
 #include "aabb.h"
-#include "bvh_node.h"
 
 // shared_ptr is a smart pointer that retains
 // shared ownership of an object through a pointer
@@ -24,6 +23,6 @@ public:
   void clear();
   void add(shared_ptr<hittable> object);
   virtual bool hit(ray r, double t_min, double t_max, hit_record &rec) override;
-  virtual bool bounding_box(double t_min, double t_max, aabb &output_box) override;
+  virtual bool bounding_box(aabb &output_box) override;
 };
 #endif

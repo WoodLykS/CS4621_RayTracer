@@ -19,7 +19,7 @@ public:
   sphere();
   sphere(point3 center, double rad, shared_ptr<material> m);
   virtual bool hit(ray r, double t_min, double t_max, hit_record &rec) override;
-  virtual bool bounding_box(double t_min, double t_max, aabb &output_box) override;
+  virtual bool bounding_box(aabb &output_box) override;
 };
 
 sphere::sphere()
@@ -35,7 +35,7 @@ sphere::sphere(point3 cen, double rad, shared_ptr<material> m)
   mat_ptr = m;
 }
 
-bool sphere::bounding_box(double t_min, double t_max, aabb &output_box)
+bool sphere::bounding_box(aabb &output_box)
 {
   point3 v1 = vec3(center.x() - radius,
                    center.y() - radius, center.z() - radius);

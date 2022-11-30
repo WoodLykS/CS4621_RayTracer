@@ -2,7 +2,6 @@
 #define BVH_NODE_H
 
 #include "../render/material.h"
-#include "hittable.h"
 #include "hittablelist.h"
 #include "aabb.h"
 #include "vec3.h"
@@ -10,22 +9,23 @@
 #include <memory>
 #include <algorithm>
 #include "ray.h"
+#include "hittable.h"
 
 using std::make_shared;
 using std::shared_ptr;
 
-class bvh_node : public hittable
+class bvh_node
 {
 public:
-  shared_ptr<bvh_node> left;
-  shared_ptr<bvh_node> right;
+  bvh_node *left;
+  bvh_node *right;
   aabb bbox;
   bool primitive;
-  // hittable surf;
+  vector<hittable> surf;
   bvh_node();
-  bvh_node(std::vector<shared_ptr<aabb>> &src_bboxes, size_t start, size_t end, int idx);
-  virtual bool hit(ray r, double t_min, double t_max, hit_record &rec) override;
-  virtual bool bounding_box(double t_min, double t_max, aabb &output_box) override;
+  bvh_node(std::vector<shared_ptr<hittable>> &src_bojs, size_t start, size_t end, int idx);
+  bool hit(ray r, double t_min, double t_max, hit_record &rec);
+  bool bounding_box(double t_min, double t_max, aabb &output_box);
 };
 
 bool bvh_node::bounding_box(double t_min, double t_max, aabb &output_box)
@@ -47,9 +47,12 @@ bool bvh_node::hit(ray r, double t_min, double t_max, hit_record &rec)
 
 bvh_node ::bvh_node()
 {
+  vector<hittable> v;
   bbox = aabb();
-  left = make_shared<bvh_node>();
-  right = make_shared<bvh_node>();
+  left = NULL;
+  right = NULL;
+  primitive = false;
+  surf = v;
 }
 bool bbox_helper(aabb &bbox1, aabb &bbox2, aabb &bbox3)
 {
@@ -60,27 +63,44 @@ bool bbox_helper(aabb &bbox1, aabb &bbox2, aabb &bbox3)
   return true;
 }
 
-bool newcompare(shared_ptr<aabb> &a, shared_ptr<aabb> &b, int idx)
+bool newcompare(shared_ptr<hittable> &a, shared_ptr<hittable> &b, int idx)
 {
-  return (a->minimum[idx] < b->minimum[idx]);
+  aabb bbox1 = aabb();
+  aabb bbox2 = aabb();
+  a->bounding_box(bbox1);
+  b->bounding_box(bbox2);
+  return (bbox1.minimum[idx] < bbox2.minimum[idx]);
 }
 
-bool xcomp(shared_ptr<aabb> &a, shared_ptr<aabb> &b)
+bool xcomp(shared_ptr<hittable> &a, shared_ptr<hittable> &b)
 {
   newcompare(a, b, 0);
 }
-bool ycomp(shared_ptr<aabb> &a, shared_ptr<aabb> &b)
+bool ycomp(shared_ptr<hittable> &a, shared_ptr<hittable> &b)
 {
   newcompare(a, b, 1);
 }
-bool zcomp(shared_ptr<aabb> &a, shared_ptr<aabb> &b)
+bool zcomp(shared_ptr<hittable> &a, shared_ptr<hittable> &b)
 {
   newcompare(a, b, 2);
 }
 
-bvh_node::bvh_node(std::vector<shared_ptr<aabb>> &src_bboxes, size_t start, size_t end, int idx)
+std::vector<hittable> join(std::vector<hittable> x, std::vector<hittable> y)
 {
-  std::vector<shared_ptr<aabb>> &lst = src_bboxes;
+  std::vector<hittable> vec = x;
+  for (int i = 0; i < y.size(); i++)
+  {
+    vec.push_back(y[i]);
+  }
+  // vec.reserve(x.size() + y.size());
+  // vec.insert(vec.end(), x.begin(), x.end());
+  // vec.insert(vec.end(), y.begin(), y.end());
+  return vec;
+}
+
+bvh_node::bvh_node(std::vector<shared_ptr<hittable>> &src_objects, size_t start, size_t end, int idx)
+{
+  std::vector<shared_ptr<hittable>> &lst = src_objects;
   int lstsize = end - start;
   if (lstsize == 0)
   {
@@ -88,16 +108,23 @@ bvh_node::bvh_node(std::vector<shared_ptr<aabb>> &src_bboxes, size_t start, size
   }
   else if (lstsize == 1)
   {
-    bbox = *lst[start];
-    left = make_shared<bvh_node>();
-    right = make_shared<bvh_node>();
+    vector<hittable> v;
+    bbox = aabb();
+    lst[start]->bounding_box(bbox);
+    v.push_back(*lst[start]);
+    surf = v;
+    primitive = true;
+    left = NULL;
+    right = NULL;
   }
   else if (lstsize == 2)
   {
+    left = new bvh_node(lst, start, end - 1, 0);
+    right = new bvh_node(lst, start + 1, end, 0);
     bbox = aabb();
-    bbox_helper(*lst[start], *lst[start + 1], bbox);
-    left = make_shared<bvh_node>(lst, 1, 2, 0);
-    right = make_shared<bvh_node>();
+    bbox_helper(left->bbox, right->bbox, bbox);
+    primitive = false;
+    surf = left->surf + right->surf;
   }
   else
   {
@@ -115,9 +142,12 @@ bvh_node::bvh_node(std::vector<shared_ptr<aabb>> &src_bboxes, size_t start, size
     {
       sort(lst.begin() + start, lst.begin() + end, zcomp);
     }
-    left = make_shared<bvh_node>(lst, start, mid, ((idx + 1) % 3));
-    right = make_shared<bvh_node>(lst, mid + 1, end, ((idx + 1) % 3));
+    left = new bvh_node(lst, start, mid, ((idx + 1) % 3));
+    right = new bvh_node(lst, mid, end, ((idx + 1) % 3));
+    bbox = aabb();
     bbox_helper(left->bbox, right->bbox, bbox);
+    primitive = false;
+    surf = join(left->surf, right->surf);
   }
 }
 // // bool bvh_node ::hit(ray r, float t_min, float t_max)

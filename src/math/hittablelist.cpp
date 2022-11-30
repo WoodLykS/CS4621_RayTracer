@@ -52,18 +52,18 @@ bool bbox_helper(aabb &bbox1, aabb &bbox2)
   return true;
 }
 
-bool hittable_list::bounding_box(double t_min, double t_max, aabb &output_box)
+bool hittable_list::bounding_box(aabb &output_box)
 {
   if (objects.empty())
     return false;
   else
   {
     aabb temp = aabb();
-    objects[0]->bounding_box(t_min, t_max, temp);
+    objects[0]->bounding_box(temp);
     for (int i = 1; i < objects.size(); i++)
     {
       aabb local = aabb();
-      if (!objects[i]->bounding_box(t_min, t_max, local))
+      if (!objects[i]->bounding_box(local))
         return false;
       bbox_helper(temp, local);
     }
