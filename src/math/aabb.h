@@ -1,8 +1,7 @@
-#ifndef AABB_H
-#define AABB_H
+#ifndef AABB_HH
+#define AABB_HH
 
 #include "vec3.h"
-
 #include <cmath>
 class aabb
 {

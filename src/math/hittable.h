@@ -31,6 +31,6 @@ class hittable
 {
 public:
   virtual bool hit(ray r, double t_min, double t_max, hit_record &rec) = 0;
-  virtual bool bounding_box(double t_min, double t_max, aabb &output_box) = 0;
+  virtual bool bounding_box(aabb &output_box) = 0;
 };
 #endif

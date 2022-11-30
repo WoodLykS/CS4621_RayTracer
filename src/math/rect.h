@@ -13,7 +13,7 @@ public:
       double _x0, double _x1, double _y0, double _y1, double _k, shared_ptr<material> mat) : x0(_x0), x1(_x1), y0(_y0), y1(_y1), k(_k), mp(mat){};
 
   virtual bool hit(ray r, double t_min, double t_max, hit_record &rec) override;
-  virtual bool bounding_box(double t_min, double t_max, aabb &output_box) override;
+  virtual bool bounding_box(aabb &output_box) override;
 
 public:
   shared_ptr<material> mp;
@@ -29,7 +29,7 @@ public:
       double _x0, double _x1, double _z0, double _z1, double _k, shared_ptr<material> mat) : x0(_x0), x1(_x1), z0(_z0), z1(_z1), k(_k), mp(mat){};
 
   virtual bool hit(ray r, double t_min, double t_max, hit_record &rec) override;
-  virtual bool bounding_box(double t_min, double t_max, aabb &output_box) override;
+  virtual bool bounding_box(aabb &output_box) override;
 
 public:
   shared_ptr<material> mp;
@@ -45,7 +45,7 @@ public:
       double _y0, double _y1, double _z0, double _z1, double _k, shared_ptr<material> mat) : y0(_y0), y1(_y1), z0(_z0), z1(_z1), k(_k), mp(mat){};
 
   virtual bool hit(ray r, double t_min, double t_max, hit_record &rec) override;
-  virtual bool bounding_box(double t_min, double t_max, aabb &output_box) override;
+  virtual bool bounding_box(aabb &output_box) override;
 
 public:
   shared_ptr<material> mp;
@@ -118,16 +118,23 @@ bool yz_rect::hit(ray r, double t_min, double t_max, hit_record &rec)
   return true;
 }
 
-bool xy_rect::bounding_box(double t_min, double t_max, aabb &output_box)
+bool xy_rect::bounding_box(aabb &output_box)
 {
+  point3 v1 = vec3(std::min(x0, x1), std::min(y0, y1), k);
+  point3 v2 = vec3(std::max(x0, x1), std::max(y0, y1), k);
+  output_box = aabb(v1, v2);
   return true;
 }
-bool xz_rect::bounding_box(double t_min, double t_max, aabb &output_box)
+bool xz_rect::bounding_box(aabb &output_box)
 {
+  point3 v1 = vec3(std::min(x0, x1), k, std::min(z0, z1));
+  point3 v2 = vec3(std::max(x0, x1), k, std::max(z0, z1));
   return true;
 }
-bool yz_rect::bounding_box(double t_min, double t_max, aabb &output_box)
+bool yz_rect::bounding_box(aabb &output_box)
 {
+  point3 v1 = vec3(k, std::min(y0, y1), std::min(z0, z1));
+  point3 v2 = vec3(k, std::max(y0, y1), std::max(z0, z1));
   return true;
 }
 #endif
