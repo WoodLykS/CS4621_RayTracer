@@ -7,6 +7,7 @@
 #include "vec3.h"
 #include <cmath>
 #include <memory>
+#include <vector>
 #include <algorithm>
 #include "ray.h"
 #include "hittable.h"
@@ -21,7 +22,7 @@ public:
   bvh_node *right;
   aabb bbox;
   bool primitive;
-  vector<hittable> surf;
+  std::vector<shared_ptr<hittable>> surf;
   bvh_node();
   bvh_node(std::vector<shared_ptr<hittable>> &src_bojs, size_t start, size_t end, int idx);
   bool hit(ray r, double t_min, double t_max, hit_record &rec);
@@ -47,7 +48,7 @@ bool bvh_node::hit(ray r, double t_min, double t_max, hit_record &rec)
 
 bvh_node ::bvh_node()
 {
-  vector<hittable> v;
+  std::vector<shared_ptr<hittable>> v;
   bbox = aabb();
   left = NULL;
   right = NULL;
@@ -85,16 +86,14 @@ bool zcomp(shared_ptr<hittable> &a, shared_ptr<hittable> &b)
   newcompare(a, b, 2);
 }
 
-std::vector<hittable> join(std::vector<hittable> x, std::vector<hittable> y)
+std::vector<shared_ptr<hittable>> &join(std::vector<shared_ptr<hittable>> &x, std::vector<shared_ptr<hittable>> &y)
 {
-  std::vector<hittable> vec = x;
+  std::vector<shared_ptr<hittable>> vec = x;
   for (int i = 0; i < y.size(); i++)
   {
     vec.push_back(y[i]);
   }
-  // vec.reserve(x.size() + y.size());
-  // vec.insert(vec.end(), x.begin(), x.end());
-  // vec.insert(vec.end(), y.begin(), y.end());
+
   return vec;
 }
 
@@ -108,10 +107,10 @@ bvh_node::bvh_node(std::vector<shared_ptr<hittable>> &src_objects, size_t start,
   }
   else if (lstsize == 1)
   {
-    vector<hittable> v;
+    std::vector<shared_ptr<hittable>> v;
     bbox = aabb();
     lst[start]->bounding_box(bbox);
-    v.push_back(*lst[start]);
+    v.push_back(lst[start]);
     surf = v;
     primitive = true;
     left = NULL;
@@ -124,7 +123,7 @@ bvh_node::bvh_node(std::vector<shared_ptr<hittable>> &src_objects, size_t start,
     bbox = aabb();
     bbox_helper(left->bbox, right->bbox, bbox);
     primitive = false;
-    surf = left->surf + right->surf;
+    surf = join(left->surf, right->surf);
   }
   else
   {

@@ -4,7 +4,7 @@
 #include "../render/material.h"
 #include "hittable.h"
 #include "hittablelist.h"
-#include "aabb.h"
+// #include "aabb.h"
 #include "vec3.h"
 #include <cmath>
 #include <memory>
