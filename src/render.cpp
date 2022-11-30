@@ -3,9 +3,9 @@
 using namespace std;
 
 const double aspect_ratio = 16.0 / 9.0;
-const int image_width = 400;
+const int image_width = 1440;
 const int image_height = static_cast<int>(image_width / aspect_ratio);
-const int samples_per_pixel = 100;
+const int samples_per_pixel = 500;
 const int max_depth = 50;
 const color BACKGROUND = color(0.4, 0.4, 0.4);
 SCENE scene = GET_SCENE_random(aspect_ratio);
@@ -127,6 +127,7 @@ void render_line(int j)
 }
 int main()
 {
+  auto t1 = chrono::high_resolution_clock::now();
   srand(time(NULL));
   freopen("render.ppm", "w", stdout);
 
