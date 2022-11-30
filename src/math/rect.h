@@ -2,6 +2,7 @@
 #define AARECT_H
 #include "util.h"
 #include "hittable.h"
+#include "aabb.h"
 
 class xy_rect : public hittable
 {
@@ -12,6 +13,7 @@ public:
       double _x0, double _x1, double _y0, double _y1, double _k, shared_ptr<material> mat) : x0(_x0), x1(_x1), y0(_y0), y1(_y1), k(_k), mp(mat){};
 
   virtual bool hit(ray r, double t_min, double t_max, hit_record &rec) override;
+  virtual bool bounding_box(double t_min, double t_max, aabb &output_box) override;
 
 public:
   shared_ptr<material> mp;
@@ -27,6 +29,7 @@ public:
       double _x0, double _x1, double _z0, double _z1, double _k, shared_ptr<material> mat) : x0(_x0), x1(_x1), z0(_z0), z1(_z1), k(_k), mp(mat){};
 
   virtual bool hit(ray r, double t_min, double t_max, hit_record &rec) override;
+  virtual bool bounding_box(double t_min, double t_max, aabb &output_box) override;
 
 public:
   shared_ptr<material> mp;
@@ -42,6 +45,7 @@ public:
       double _y0, double _y1, double _z0, double _z1, double _k, shared_ptr<material> mat) : y0(_y0), y1(_y1), z0(_z0), z1(_z1), k(_k), mp(mat){};
 
   virtual bool hit(ray r, double t_min, double t_max, hit_record &rec) override;
+  virtual bool bounding_box(double t_min, double t_max, aabb &output_box) override;
 
 public:
   shared_ptr<material> mp;
@@ -114,4 +118,16 @@ bool yz_rect::hit(ray r, double t_min, double t_max, hit_record &rec)
   return true;
 }
 
+bool xy_rect::bounding_box(double t_min, double t_max, aabb &output_box)
+{
+  return true;
+}
+bool xz_rect::bounding_box(double t_min, double t_max, aabb &output_box)
+{
+  return true;
+}
+bool yz_rect::bounding_box(double t_min, double t_max, aabb &output_box)
+{
+  return true;
+}
 #endif

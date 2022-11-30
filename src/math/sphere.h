@@ -15,7 +15,7 @@ public:
   point3 center;
   double radius;
   shared_ptr<material> mat_ptr;
-  aabb bbox;
+  // aabb bbox;
   sphere();
   sphere(point3 center, double rad, shared_ptr<material> m);
   virtual bool hit(ray r, double t_min, double t_max, hit_record &rec) override;

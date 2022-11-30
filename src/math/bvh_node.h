@@ -8,7 +8,11 @@
 #include "vec3.h"
 #include <cmath>
 #include <memory>
+#include <algorithm>
 #include "ray.h"
+
+using std::make_shared;
+using std::shared_ptr;
 
 class bvh_node : public hittable
 {
@@ -16,6 +20,8 @@ public:
   shared_ptr<bvh_node> left;
   shared_ptr<bvh_node> right;
   aabb bbox;
+  bool primitive;
+  // hittable surf;
   bvh_node();
   bvh_node(std::vector<shared_ptr<aabb>> &src_bboxes, size_t start, size_t end, int idx);
   virtual bool hit(ray r, double t_min, double t_max, hit_record &rec) override;
