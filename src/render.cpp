@@ -142,8 +142,8 @@ int main()
   }
   // new_write_color(cout);
   cerr << "\nDone.\n";
-  auto t2 = chrono::high_resolution_clock::now();
-  chrono::duration<double, std::milli> ms_double = t2 - t1;
-  cerr << ms_double.count() / 1000 << endl;
+  // auto t2 = chrono::high_resolution_clock::now();
+  // chrono::duration<double, std::milli> ms_double = t2 - t1;
+  // cerr << ms_double.count() / 1000 << endl;
   return 0;
 }

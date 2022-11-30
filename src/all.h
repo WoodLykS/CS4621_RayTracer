@@ -8,6 +8,9 @@
 #include "math/hittablelist.h"
 #include "math/sphere.h"
 #include "math/vec3.h"
+#include "math/aabb.h"
+#include "math/box.h"
+#include "math/bvh_node.h"
 #include "render/camera.h"
 #include <iostream>
 #include <random>

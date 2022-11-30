@@ -1,5 +1,5 @@
 .PHONY = all clean build test picture
-CC = g++ -pthread
+CC = g++ -std=c++11 -pthread
 
 # SRCS := $(shell find . -name "*.cpp")
 # BINS := $(SRCS:%.cpp=%.o)

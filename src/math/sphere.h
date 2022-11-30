@@ -15,10 +15,11 @@ public:
   point3 center;
   double radius;
   shared_ptr<material> mat_ptr;
+  aabb bbox;
   sphere();
   sphere(point3 center, double rad, shared_ptr<material> m);
   virtual bool hit(ray r, double t_min, double t_max, hit_record &rec) override;
-  void bbox();
+  virtual bool bounding_box(double t_min, double t_max, aabb &output_box) override;
 };
 
 sphere::sphere()
@@ -34,14 +35,15 @@ sphere::sphere(point3 cen, double rad, shared_ptr<material> m)
   mat_ptr = m;
 }
 
-// void sphere::bbox()
-// {
-//   point3 v1 = vec3(center.x() - radius,
-//                    center.y() - radius, center.z() - radius);
-//   point3 v2 = vec3(center.x() + radius,
-//                    center.y() + radius, center.z() + radius);
-//   hittable_list lst return aabb(v1, v2);
-// }
+bool sphere::bounding_box(double t_min, double t_max, aabb &output_box)
+{
+  point3 v1 = vec3(center.x() - radius,
+                   center.y() - radius, center.z() - radius);
+  point3 v2 = vec3(center.x() + radius,
+                   center.y() + radius, center.z() + radius);
+  output_box = aabb(v1, v2);
+  return true;
+}
 
 bool sphere::hit(ray r, double t_min, double t_max, hit_record &rec)
 {
