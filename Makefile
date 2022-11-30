@@ -40,6 +40,9 @@ random: clean hittablelist.o ray.o vec3.o
 test: clean vec3.o ray.o
 	${CC} -o test.out src/test.cpp $(shell find . -name "*.o") 
 
+fxaa: vec3.o
+	${CC} -o FXAA.out src/FXAA.cpp vec3.o
+	./FXAA.out
 
 # %.o: %.cpp
 # 	${CC} -c $<
