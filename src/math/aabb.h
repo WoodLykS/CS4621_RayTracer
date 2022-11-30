@@ -6,13 +6,12 @@
 #include "hittablelist.h"
 class aabb
 {
-
+public:
   point3 minimum;
   point3 maximum;
-  hittable_list lst;
 
   aabb();
-  aabb(point3 v1, point3 v2, hittable_list lst);
+  aabb(point3 v1, point3 v2);
   bool hit(ray r, float t_min, float t_max);
 };
 
@@ -20,30 +19,13 @@ aabb::aabb()
 {
   minimum = vec3();
   maximum = vec3();
-  lst = hittable_list();
 }
-aabb::aabb(point3 v1, point3 v2, hittable_list lst)
+aabb::aabb(point3 v1, point3 v2)
 {
   minimum = v1;
   maximum = v2;
-  lst = lst;
 }
-// origin = ray.origin
-//         invD = 1 / ray.direction
-//         tmin = ray.start
-//         tmax = ray.end
-//         lbound = (self.minimum - origin)*invD
-//         rbound = (self.maximum - origin)*invD
 
-//         for i in range(3):
-//             t0 = min(lbound[i], rbound[i])
-//             t1 = max(lbound[i], rbound[i])
-//             tmin = max(t0, tmin)
-//             tmax = min(t1, tmax)
-//             if (tmax < tmin):
-//                 return False
-//         # print("ture")
-//         return True
 bool aabb::hit(ray r, float t_min, float t_max)
 {
   vec3 ori = r.origin;

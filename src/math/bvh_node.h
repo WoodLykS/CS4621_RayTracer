@@ -8,7 +8,6 @@
 #include "vec3.h"
 #include <cmath>
 #include <memory>
-#include "aabb.h"
 #include "ray.h"
 
 class bvh_node
@@ -18,8 +17,8 @@ public:
   bvh_node *right;
   bvh_node *left;
   bvh_node();
-  bvh_node(aabb box, bvh_node r, bvh_node l);
-  hit(ray r, hit_record &rec);
+  bvh_node(aabb box, bvh_node *r, bvh_node *l);
+  bool hit(ray r, float t_min, float t_max);
 };
 
 bvh_node ::bvh_node()
@@ -28,16 +27,23 @@ bvh_node ::bvh_node()
   right = NULL;
   left = NULL;
 }
-bvh_node ::bvh_node(aabb box, bvh_node r, bvh_node l)
+bvh_node ::bvh_node(aabb box, bvh_node *r, bvh_node *l)
 {
   bbox = box;
   right = r;
   left = l;
 }
 
-bool bvh_node ::hit(ray r, float t_min, float t_max, hit_record rec)
+bool bvh_node ::hit(ray r, float t_min, float t_max)
 {
-  if (not bbox.hit(r, ))
+  if (not bbox.hit(r, t_min, t_max))
+  {
     return false;
+  }
+
+  bool rb = right->bbox.hit(r, t_min, t_max);
+  bool lb = left->bbox.hit(r, t_min, t_max);
+  return rb || lb;
 }
+
 #endif
