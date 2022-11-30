@@ -3,7 +3,7 @@
 #include <cmath>
 #include <memory>
 #include <vector>
-#include "bvh_node.h"
+#include "aabb.h"
 
 using namespace std;
 
@@ -45,8 +45,8 @@ bool hittable_list::hit(ray r, double t_min, double t_max, hit_record &rec)
 
 bool bbox_helper(aabb &bbox1, aabb &bbox2)
 {
-  point3 v1 = vec3(min(bbox1.minimum.x(), bbox2.minimum.x()), min(bbox1.minimum.y(), bbox2.minimum.y()), min(bbox1.minimum.z(), bbox2.minimum.z()));
-  point3 v2 = vec3(max(bbox1.maximum.x(), bbox2.maximum.x()), max(bbox1.maximum.y(), bbox2.maximum.y()), max(bbox1.maximum.z(), bbox2.maximum.z()));
+  point3 v1 = vec3(std::min(bbox1.minimum.x(), bbox2.minimum.x()), std::min(bbox1.minimum.y(), bbox2.minimum.y()), std::min(bbox1.minimum.z(), bbox2.minimum.z()));
+  point3 v2 = vec3(std::max(bbox1.maximum.x(), bbox2.maximum.x()), std::max(bbox1.maximum.y(), bbox2.maximum.y()), std::max(bbox1.maximum.z(), bbox2.maximum.z()));
 
   bbox1 = aabb(v1, v2);
   return true;

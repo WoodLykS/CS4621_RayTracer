@@ -2,6 +2,8 @@
 #define HITTABLE_H
 #include <memory>
 #include "ray.h"
+#include "aabb.h"
+
 //#include "../render/material.h"
 
 class material;
@@ -29,6 +31,6 @@ class hittable
 {
 public:
   virtual bool hit(ray r, double t_min, double t_max, hit_record &rec) = 0;
-  virtual bool bounding_box(double t_min, double t_max, aabb &output_box);
+  virtual bool bounding_box(double t_min, double t_max, aabb &output_box) = 0;
 };
 #endif

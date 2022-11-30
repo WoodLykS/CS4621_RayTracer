@@ -5,6 +5,7 @@
 #include <cmath>
 #include <memory>
 #include <vector>
+#include "aabb.h"
 #include "bvh_node.h"
 
 // shared_ptr is a smart pointer that retains

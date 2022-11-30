@@ -2,8 +2,8 @@
 #define AABB_H
 
 #include "vec3.h"
-#include "hittable.h"
-#include "hittablelist.h"
+
+#include <cmath>
 class aabb
 {
 public:
@@ -12,7 +12,7 @@ public:
 
   aabb();
   aabb(point3 v1, point3 v2);
-  bool hit(ray r, float t_min, float t_max);
+  bool hit(ray r, double t_min, double t_max);
 };
 
 aabb::aabb()
@@ -26,7 +26,7 @@ aabb::aabb(point3 v1, point3 v2)
   maximum = v2;
 }
 
-bool aabb::hit(ray r, float t_min, float t_max)
+bool aabb::hit(ray r, double t_min, double t_max)
 {
   vec3 ori = r.origin;
   vec3 invD = vec3(1 / r.velocity.x(), 1 / r.velocity.y(), 1 / r.velocity.z());
@@ -34,10 +34,10 @@ bool aabb::hit(ray r, float t_min, float t_max)
   vec3 rbound = (maximum - ori) * invD;
   for (int i = 0; i < 3; i++)
   {
-    float t0 = min(lbound[i], rbound[i]);
-    float t1 = max(lbound[i], rbound[i]);
-    float tmin = max(t_min, t0);
-    float tmax = min(t_max, t1);
+    double t0 = std::min(lbound[i], rbound[i]);
+    double t1 = std::max(lbound[i], rbound[i]);
+    double tmin = std::max(t_min, t0);
+    double tmax = std::min(t_max, t1);
     if (tmax < tmin)
     {
       return false;
