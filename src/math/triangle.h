@@ -29,9 +29,9 @@ public:
     v2 = b;
     v3 = c;
     mat_ptr = m;
-    // cerr << v1 << endl
-    //      << v2 << endl
-    //      << v1 - v2 << endl;
+    cerr << v1 << endl
+         << v2 << endl
+         << v3 << endl;
   }
 
   bool hit(ray r, double t_min, double t_max, hit_record &rec) override
@@ -56,11 +56,12 @@ public:
     vec3 n = cross(a, b).normalize();
     if (dot(p - r.origin, n) > 0)
       n = -n;
+
     rec.p = p;
     rec.t = t;
-    // rec.normal = n;
+    rec.normal = n;
     rec.mat_ptr = mat_ptr;
-    rec.set_face_normal(r, n);
+    // rec.set_face_normal(r, n);
     return true;
   }
   bool bounding_box(aabb &output_box) override

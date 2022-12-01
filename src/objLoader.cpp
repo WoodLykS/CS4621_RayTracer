@@ -9,7 +9,7 @@ vector<double> vertices[MAX];
 vector<double> vns[MAX];
 vector<double> fs[MAX];
 int vacc = 0;
-
+int facc = 0;
 int main()
 {
 
@@ -30,20 +30,7 @@ int main()
           vertices[vacc].push_back(local);
         }
         // cout << vertices[vacc][0] << vertices[vacc][1] << vertices[vacc][2] << endl;
-        // vacc++;
-        // cout << vacc << endl;
-      }
-      else if (mystring == "vn")
-      {
-        for (int i = 0; i < 3; i++)
-        {
-          myfile >> mystring;
-          double local = stod(mystring);
-
-          vns[vacc].push_back(local);
-        }
-        // cout << vns[vacc][0] << vns[vacc][1] << vns[vacc][2] << endl;
-        // vacc++;
+        vacc++;
         // cout << vacc << endl;
       }
       else if (mystring == "f")
@@ -55,10 +42,10 @@ int main()
           mystring = mystring.substr(0, endIdx - 1);
           double local = stoi(mystring);
 
-          fs[vacc].push_back(local);
+          fs[facc].push_back(local);
         }
         // cout << fs[vacc][0] << fs[vacc][1] << fs[vacc][2] << endl;
-        // vacc++;
+        facc++;
         // cout << vacc << endl;
       }
     }

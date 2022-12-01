@@ -2,12 +2,12 @@
 using namespace std;
 
 const double aspect_ratio = 16.0 / 9.0;
-const int image_width = 1080;
+const int image_width = 400;
 const int image_height = static_cast<int>(image_width / aspect_ratio);
-const int samples_per_pixel = 5;
+const int samples_per_pixel = 10;
 const int max_depth = 50;
 const color BACKGROUND = color(0.4, 0.4, 0.4);
-SCENE scene = GET_SCENE_1(aspect_ratio);
+SCENE scene = GET_SCENE_DEER(aspect_ratio);
 hittable_list world = scene.world;
 bvh_node bbx_root = scene.bbx_root;
 camera cam = scene.cam;
@@ -129,6 +129,11 @@ void render_line(int j)
 }
 int main()
 {
+  hit_record rec = hit_record();
+  Material_M material_right = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
+  triangle tri = triangle(point3(1, 1, 1), point3(-1, -1, 1), point3(1, -1, 1), material_right);
+  bool ifhit = tri.hit(ray(vec3(10, 0, 0), vec3(-1, 0, 0)), 0, infinity, rec);
+  cerr << "!!!!" << ifhit << endl;
   auto t1 = chrono::high_resolution_clock::now();
   srand(time(NULL));
   // ignore the return value

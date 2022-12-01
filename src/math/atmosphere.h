@@ -19,7 +19,11 @@ public:
   double densityFalloff = 4;
   double atomsphreScale = 1; //depth of the atmosphere
   vec3 wavelengths = vec3(700, 530, 440);
-  double scatteringStrength = 1;
+  double scatteringStrength = 6.2;
+  double scatterR = std::pow(400 / wavelengths.x(), 4) * scatteringStrength;
+  double scatterG = std::pow(400 / wavelengths.y(), 4) * scatteringStrength;
+  double scatterB = std::pow(400 / wavelengths.z(), 4) * scatteringStrength;
+  vec3 coeffs = vec3(scatterR, scatterG, scatterB);
   //hittable usuals
   std::shared_ptr<hittable> planet;
   point3 center;
@@ -49,7 +53,7 @@ public:
 
   double densityAtPoint(vec3 densitySamplePoint);
   double opticalDepth(ray r, double ray_length);
-  double calculateLight(ray r, double t_min, double t_max, hit_record &rec);
+  vec3 calculateLight(ray r, double ray_length, double t_min, double t_max, hit_record &rec);
 };
 
 // first helper, point density, exponentially thiner air as you go up
@@ -78,6 +82,21 @@ double atmosphere::opticalDepth(ray r, double ray_length)
     densitySamplePoint += r.velocity * stepSize;
   }
   return opticalDepth;
+}
+
+vec3 atmosphere::calculateLight(ray r, double ray_length, double t_min, double t_max, hit_record &rec)
+{
+  //again, this ray is not a fake camera ray, instead, it is the
+  vec3 inScatteringPoint = r.origin;
+  double stepSize = ray_length / (inScatteringPoints - 1);
+  double inScatteringLight = 0;
+
+  for (int i = 0; i < inScatteringPoints; i++)
+  {
+    // sumlight??? goes here
+    // double realRayopticalDepth = opticalDepth(inScatteringPoint,)
+  }
+  return vec3();
 }
 
 #endif

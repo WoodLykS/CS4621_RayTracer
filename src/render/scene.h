@@ -1,5 +1,8 @@
 #ifndef SCENE_H
 #define SCENE_H
+#include <iostream>
+#include <fstream>
+#include <string>
 #include "../math/hittablelist.h"
 #include "material.h"
 #include "metal.h"
@@ -15,7 +18,87 @@ struct SCENE
   camera cam;
   bvh_node bbx_root;
 };
+hittable_list mesh_lst = hittable_list();
+void obj2lst(string fileName, double downSizeBy = 1.0)
+{
+  bool flag = true;
+  const int MAX = 64000;
+  vector<double> vertices[MAX];
+  // vector<double> vns[MAX];
 
+  int vacc = 0;
+  // int vnacc = 0;
+  int facc = 0;
+  ifstream myfile;
+  Material_M material_right = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
+  // freopen(fileName.c_str(), "r", stdin);
+  myfile.open(fileName, ios::in);
+
+  assert(!myfile.fail());
+  {
+
+    std::string mystring;
+    while (myfile >> mystring)
+    {
+      // cerr << mystring << endl;
+      if (mystring == "v")
+      {
+        for (int i = 0; i < 3; i++)
+        {
+          myfile >> mystring;
+          double local = std::stod(mystring) / downSizeBy;
+          vertices[vacc].push_back(local);
+        }
+        vacc++;
+      }
+      else if (mystring == "f")
+      {
+
+        int temp[3];
+        for (int i = 0; i < 3; i++)
+        {
+          myfile >> mystring;
+          int endIdx = mystring.rfind('/');
+          mystring = mystring.substr(0, endIdx - 1);
+          temp[i] = std::stoi(mystring);
+        }
+
+        point3 v1 = vec3(vertices[temp[0] - 1][0], vertices[temp[0] - 1][1], vertices[temp[0] - 1][2]);
+        point3 v2 = vec3(vertices[temp[1] - 1][0], vertices[temp[1] - 1][1], vertices[temp[1] - 1][2]);
+        point3 v3 = vec3(vertices[temp[2] - 1][0], vertices[temp[2] - 1][1], vertices[temp[2] - 1][2]);
+
+        cerr << temp[0] << " " << temp[1] << " " << temp[2] << endl;
+        cerr << v1.x() << " " << v1.y() << " " << v1.z() << endl;
+        cerr << v2.x() << " " << v2.y() << " " << v2.z() << endl;
+        cerr << v3.x() << " " << v3.y() << " " << v3.z() << endl;
+        flag = false;
+
+        mesh_lst.add(make_shared<triangle>(v1, v2, v3, material_right));
+      }
+    }
+    // myfile.close();
+  }
+  cerr << "done" << endl;
+  return;
+}
+SCENE
+GET_SCENE_DEER(double aspect_ratio)
+{
+  obj2lst("/Users/taylor/Documents/CS4620/CS4621_RayTracer/src/cube.obj", 2.0);
+  Material_M material_right = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
+  Material_M material_r = make_shared<metal>(color(1, 0, 0), 0.0);
+
+  // mesh_lst.add(make_shared<triangle>(point3(1, 1, 3), point3(-1, -1, 3), point3(1, -1, 3), material_r));
+  // mesh_lst.add(make_shared<triangle>(point3(1, 1, 3), point3(-1, 1, 3), point3(-1, -1, 3), material_r));
+  // mesh_lst.add(make_shared<triangle>(point3(-1, 1, -1), point3(1, 1, -1), point3(1, -1, -1), material_r));
+  // mesh_lst.add(make_shared<triangle>(point3(-1, 1, -1), point3(1, -1, -1), point3(-1, -1, -1), material_r));
+  // mesh_lst.add(make_shared<box>(point3(-0.8, -0.8, -0.8), point3(0.8, 0.8, 0.8), material_right));
+  camera cam(point3(13, 2, 4), point3(0, 0, 0), vec3(0, 1, 0), 50,
+             aspect_ratio, 0, 20);
+
+  bvh_node root = bvh_node(mesh_lst.objects, 0, mesh_lst.objects.size(), 0);
+  return SCENE{mesh_lst, cam, root};
+}
 SCENE
 GET_SCENE_1(double aspect_ratio)
 {
@@ -113,7 +196,7 @@ SCENE GET_SCENE_random(double aspect_ratio)
   auto material6 = make_shared<dielectric>(0.7);
   world.add(make_shared<sphere>(point3(8.5, 0.7, 0), 0.7, material6));
 
-  auto material7 = make_shared<metal>(color(0.6, 0.2, 0.5), 0.0);
+  auto material7 = make_shared<metal>(color(0.6, 0.2, 1), 0.0);
   world.add(make_shared<sphere>(point3(-3, 1, -5), 1.0, material7));
   world.add(make_shared<sphere>(point3(-3, 1, 7), 1.0, material7));
   world.add(make_shared<sphere>(point3(-9, 1, -3), 1.0, material7));
@@ -128,4 +211,5 @@ SCENE GET_SCENE_random(double aspect_ratio)
   bvh_node root = bvh_node(world.objects, 0, world.objects.size(), 0);
   return SCENE{world, cam, root};
 }
+
 #endif
