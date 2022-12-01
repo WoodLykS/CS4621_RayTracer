@@ -75,8 +75,6 @@ void write_color(ostream &out, color pixel_color)
       << static_cast<int>(255.99 * pixel_color.z()) << '\n';
 }
 
-
-
 void write_color(ostream &out, color pixel_color, int samples_per_pixel)
 {
   double r = pixel_color.x();
@@ -101,4 +99,21 @@ vec3 random_in_unit_sphere()
   return p;
 }
 
+// a,b,c are column vectors in 3*3 matrix
+double det_3(vec3 a, vec3 b, vec3 c)
+{
+  double res = 0;
+  res += a[0] * (b[1] * c[2] - b[2] * c[1]);
+  res -= b[0] * (a[1] * c[2] - a[2] * c[1]);
+  res += c[0] * (a[1] * b[2] - a[2] * b[1]);
+  return res;
+}
+double min3(double a, double b, double c)
+{
+  return min(a, min(b, c));
+}
+double max3(double a, double b, double c)
+{
+  return max(a, max(b, c));
+}
 #endif

@@ -16,7 +16,7 @@ struct hit_record
   double t;
   double u, v;
   // if the ray and the normal face in the same direction,
-  // the ray is inside the object; otherwise, outsside
+  // the ray is inside the object; otherwise, outside
   bool front_face;
   std::shared_ptr<material> mat_ptr;
 

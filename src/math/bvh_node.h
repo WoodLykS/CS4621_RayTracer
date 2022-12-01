@@ -37,24 +37,32 @@ bool bvh_node::bounding_box(double t_min, double t_max, aabb &output_box)
 
 bool bvh_node::hit(ray r, double t_min, double t_max, hit_record &rec)
 {
+  if (primitive)
+  {
+    // surf[0] is the real object
+    return surf[0]->hit(r, t_min, t_max, rec);
+  }
   if (!bbox.hit(r, t_min, t_max))
   {
     return false;
   }
+  // hit_record tmp_rec;
   bool lhit = left->hit(r, t_min, t_max, rec);
-  bool rhit = right->hit(r, t_min, t_max, rec);
+  bool rhit = right->hit(r, t_min, (lhit ? rec.t : t_max), rec);
+  
   return lhit || rhit;
 }
 
 bvh_node ::bvh_node()
 {
-  std::vector<shared_ptr<hittable>> v;
+  // std::vector<shared_ptr<hittable>> v;
   bbox = aabb();
   left = NULL;
   right = NULL;
   primitive = false;
-  surf = v;
+  surf.clear();
 }
+
 bool bbox_helper(aabb &bbox1, aabb &bbox2, aabb &bbox3)
 {
   point3 v1 = vec3(std::min(bbox1.minimum.x(), bbox2.minimum.x()), std::min(bbox1.minimum.y(), bbox2.minimum.y()), std::min(bbox1.minimum.z(), bbox2.minimum.z()));
@@ -75,27 +83,26 @@ bool newcompare(shared_ptr<hittable> &a, shared_ptr<hittable> &b, int idx)
 
 bool xcomp(shared_ptr<hittable> &a, shared_ptr<hittable> &b)
 {
-  newcompare(a, b, 0);
+  return newcompare(a, b, 0);
 }
 bool ycomp(shared_ptr<hittable> &a, shared_ptr<hittable> &b)
 {
-  newcompare(a, b, 1);
+  return newcompare(a, b, 1);
 }
 bool zcomp(shared_ptr<hittable> &a, shared_ptr<hittable> &b)
 {
-  newcompare(a, b, 2);
+  return newcompare(a, b, 2);
 }
 
-std::vector<shared_ptr<hittable>> &join(std::vector<shared_ptr<hittable>> &x, std::vector<shared_ptr<hittable>> &y)
-{
-  std::vector<shared_ptr<hittable>> vec = x;
-  for (int i = 0; i < y.size(); i++)
-  {
-    vec.push_back(y[i]);
-  }
-
-  return vec;
-}
+// std::vector<shared_ptr<hittable>> &join(std::vector<shared_ptr<hittable>> &x, std::vector<shared_ptr<hittable>> &y)
+// {
+//   std::vector<shared_ptr<hittable>> vec = x;
+//   for (int i = 0; i < y.size(); i++)
+//   {
+//     vec.push_back(y[i]);
+//   }
+//   return vec;
+// }
 
 bvh_node::bvh_node(std::vector<shared_ptr<hittable>> &src_objects, size_t start, size_t end, int idx)
 {
@@ -123,7 +130,11 @@ bvh_node::bvh_node(std::vector<shared_ptr<hittable>> &src_objects, size_t start,
     bbox = aabb();
     bbox_helper(left->bbox, right->bbox, bbox);
     primitive = false;
-    surf = join(left->surf, right->surf);
+    surf.clear();
+    for (int i = 0; i < left->surf.size(); i++)
+      surf.push_back(left->surf[i]);
+    for (int i = 0; i < right->surf.size(); i++)
+      surf.push_back(right->surf[i]);
   }
   else
   {
@@ -146,19 +157,12 @@ bvh_node::bvh_node(std::vector<shared_ptr<hittable>> &src_objects, size_t start,
     bbox = aabb();
     bbox_helper(left->bbox, right->bbox, bbox);
     primitive = false;
-    surf = join(left->surf, right->surf);
+    surf.clear();
+    for (int i = 0; i < left->surf.size(); i++)
+      surf.push_back(left->surf[i]);
+    for (int i = 0; i < right->surf.size(); i++)
+      surf.push_back(right->surf[i]);
   }
 }
-// // bool bvh_node ::hit(ray r, float t_min, float t_max)
-// // {
-// //   if (not bbox.hit(r, t_min, t_max))
-// //   {
-// //     return false;
-// //   }
-
-// //   bool rb = right->bbox.hit(r, t_min, t_max);
-// //   bool lb = left->bbox.hit(r, t_min, t_max);
-// //   return rb || lb;
-// // }
 
 #endif
