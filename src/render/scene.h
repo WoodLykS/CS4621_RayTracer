@@ -84,7 +84,7 @@ void obj2lst(string fileName, double downSizeBy = 1.0)
 SCENE
 GET_SCENE_DEER(double aspect_ratio)
 {
-  obj2lst("/Users/taylor/Documents/CS4620/CS4621_RayTracer/src/cube.obj", 2.0);
+  obj2lst("/Users/taylor/Documents/CS4620/CS4621_RayTracer/src/deer.obj");
   Material_M material_right = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
   Material_M material_r = make_shared<metal>(color(1, 0, 0), 0.0);
 
@@ -93,7 +93,7 @@ GET_SCENE_DEER(double aspect_ratio)
   // mesh_lst.add(make_shared<triangle>(point3(-1, 1, -1), point3(1, 1, -1), point3(1, -1, -1), material_r));
   // mesh_lst.add(make_shared<triangle>(point3(-1, 1, -1), point3(1, -1, -1), point3(-1, -1, -1), material_r));
   // mesh_lst.add(make_shared<box>(point3(-0.8, -0.8, -0.8), point3(0.8, 0.8, 0.8), material_right));
-  camera cam(point3(13, 2, 4), point3(0, 0, 0), vec3(0, 1, 0), 50,
+  camera cam(point3(13, 2, 7), point3(0, 0, 0), vec3(0, 1, 0), 50,
              aspect_ratio, 0, 20);
 
   bvh_node root = bvh_node(mesh_lst.objects, 0, mesh_lst.objects.size(), 0);

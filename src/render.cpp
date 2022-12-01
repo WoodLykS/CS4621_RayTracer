@@ -129,11 +129,11 @@ void render_line(int j)
 }
 int main()
 {
-  hit_record rec = hit_record();
-  Material_M material_right = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
-  triangle tri = triangle(point3(1, 1, 1), point3(-1, -1, 1), point3(1, -1, 1), material_right);
-  bool ifhit = tri.hit(ray(vec3(10, 0, 0), vec3(-1, 0, 0)), 0, infinity, rec);
-  cerr << "!!!!" << ifhit << endl;
+  // hit_record rec = hit_record();
+  // Material_M material_right = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
+  // triangle tri = triangle(point3(1, 1, 1), point3(-1, -1, 1), point3(1, -1, 1), material_right);
+  // bool ifhit = tri.hit(ray(vec3(10, 0, 0), vec3(-1, 0, 0)), 0, infinity, rec);
+  // cerr << "!!!!" << ifhit << endl;
   auto t1 = chrono::high_resolution_clock::now();
   srand(time(NULL));
   // ignore the return value
