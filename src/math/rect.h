@@ -2,7 +2,7 @@
 #define AARECT_H
 #include "util.h"
 #include "hittable.h"
-#include "aabb.h"
+// #include "aabb.h"
 
 class xy_rect : public hittable
 {

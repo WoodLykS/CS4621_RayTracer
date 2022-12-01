@@ -15,7 +15,15 @@ int max_color;
 color img[MAX_IMG_SIZE][MAX_IMG_SIZE];
 double luma_img[MAX_IMG_SIZE][MAX_IMG_SIZE];
 color new_img[MAX_IMG_SIZE][MAX_IMG_SIZE];
-int clamp(int x, int minx, int maxx)
+// int clamp(int x, int minx, int maxx)
+// {
+//   if (x < minx)
+//     x = minx;
+//   if (x > maxx)
+//     x = maxx;
+//   return x;
+// }
+double clamp(double x, double minx, double maxx)
 {
   if (x < minx)
     x = minx;
@@ -23,7 +31,6 @@ int clamp(int x, int minx, int maxx)
     x = maxx;
   return x;
 }
-
 // bilinear interpolation
 double get_interpolate_luma(double x, double y)
 {
@@ -40,6 +47,19 @@ double get_interpolate_luma(double x, double y)
   return res;
 }
 
+color get_interpolate_color(double x, double y)
+{
+  int nx = img_width;
+  int ny = img_height;
+  int fx = (int)(clamp(floor(x), 0, nx - 1));
+  int cx = (int)(clamp(floor(x) + 1, 0, nx - 1));
+  int fy = (int)(clamp(floor(y), 0, ny - 1));
+  int cy = (int)(clamp(floor(y) + 1, 0, ny - 1));
+
+  color res = img[fy][fx] * (cy - y) * (cx - x) + img[fy][cx] * (x - fx) * (cy - y) +
+              img[cy][fx] * (y - fy) * (cx - x) + img[cy][cx] * (x - fx) * (y - fy);
+  return res;
+}
 void write_ppm()
 {
   for (int i = 0; i < img_height; i++)
@@ -54,6 +74,7 @@ void write_ppm()
       printf("%d %d %d\n", r, g, b);
     }
   }
+  cerr << endl;
 }
 
 double rgb2luma(vec3 c)
@@ -117,7 +138,7 @@ int main()
 
       if (luma_max - luma_min < max(EDGE_THRESHOLD_MIN, luma_max * EDGE_THRESHOLD_MAX))
       {
-        new_img[j][i] = img[j][i];
+        // new_img[j][i] = img[j][i];
         continue;
       }
 
@@ -217,6 +238,29 @@ int main()
         dist1 = abs(uv1[1] - current_y);
         dist2 = abs(uv2[1] - current_y);
       }
+      bool is_dir1 = (dist1 <= dist2);
+      double edge_len = dist1 + dist2 + 1e-6;
+      double pixel_offset = -min(dist1, dist2) / edge_len + 0.5;
+      double luma_closer = 0;
+      if (is_dir1)
+      {
+        luma_closer = luma_end1;
+      }
+      else
+      {
+        luma_closer = luma_end2;
+      }
+      if ((luma_center < localavg and luma_closer < 0) or (luma_center > localavg and luma_closer > 0))
+        pixel_offset = 0;
+      double subpixel_avg = 2 * (luma_down + luma_up + luma_left + luma_right) +
+                            (luma_downright + luma_downleft + luma_upright + luma_upleft);
+      subpixel_avg /= 12.0;
+
+      double sub_tmp1 = clamp(abs(subpixel_avg - luma_center) / (luma_max - luma_min), 0.0, 1.0);
+      double sub_tmp2 = (-2.0 * sub_tmp1 + 3.0) * sub_tmp1 * sub_tmp1;
+      double sub_final = 0.75 * sub_tmp2 * sub_tmp2;
+      pixel_offset = max(pixel_offset, sub_final);
+      new_img[j][i] = get_interpolate_color(i + (1 - is_hori) * pixel_offset, j + is_hori * pixel_offset);
     }
   }
 

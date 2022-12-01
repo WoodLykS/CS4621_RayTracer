@@ -1,5 +1,5 @@
 .PHONY = all clean build test picture
-CC = g++ -std=c++11 -pthread
+CC = g++ -std=c++11 -pthread -O3
 
 # SRCS := $(shell find . -name "*.cpp")
 # BINS := $(SRCS:%.cpp=%.o)
@@ -28,9 +28,12 @@ hittablelist.o: src/math/hittablelist.cpp
 picture: clean sphere.o hittablelist.o ray.o vec3.o
 	${CC} -o picture.out src/picture.cpp $(shell find . -name "*.o")
 
-render: clean ray.o vec3.o
-	${CC} -o render.out src/render.cpp $(shell find . -name "*.o")
+render: clean hittablelist.o ray.o vec3.o
+	${CC} -o render.out $(shell find . -name "*.o") src/render.cpp 
 	./render.out
+# render: clean
+# 	${CC} -o render.out src/render.cpp src/math/ray.cpp src/math/vec3.cpp src/math/hittablelist.cpp $(shell find . -name "*.o")
+# 	./render.out
 
 random: clean hittablelist.o ray.o vec3.o
 	${CC} -o random.out src/random.cpp $(shell find . -name "*.o")

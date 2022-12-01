@@ -6,11 +6,14 @@
 #include "lambertian.h"
 #include "dielectric.h"
 #include "camera.h"
+#include "../math/triangle.h"
+#include "../math/bvh_node.h"
 
 struct SCENE
 {
   hittable_list world;
   camera cam;
+  bvh_node bbx_root;
 };
 
 SCENE
@@ -21,15 +24,20 @@ GET_SCENE_1(double aspect_ratio)
   Material_L material_center = make_shared<lambertian>(color(0.1, 0.2, 0.5));
   Material_D material_left = make_shared<dielectric>(1.5);
   Material_M material_right = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
-  world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
-  world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, material_center));
-  world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, material_left));
-  world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), -0.45, material_left));
-  world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
+
+  // world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
+  // world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, material_center));
+  // world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, material_left));
+  // world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), -0.45, material_left));
+  // world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
+
+  world.add(make_shared<triangle>(point3(0, 0, -1.5), point3(-1, 0, -1), point3(1, 0, -1), material_right));
+
   camera cam(point3(3, 3, 2), point3(0, 0, -1), vec3(0, 1, 0), 20.0,
              aspect_ratio, 0.1, 10);
 
-  return SCENE{world, cam};
+  bvh_node root = bvh_node(world.objects, 0, world.objects.size(), 0);
+  return SCENE{world, cam, root};
 }
 
 SCENE GET_SCENE_random(double aspect_ratio)
@@ -117,6 +125,7 @@ SCENE GET_SCENE_random(double aspect_ratio)
   world.add(make_shared<sphere>(point3(-2, 1, 3), 1.0, material8));
   camera cam(point3(13, 2, 4), point3(0, 0, 0), vec3(0, 1, 0), 50,
              aspect_ratio, 0, 20);
-  return SCENE{world, cam};
+  bvh_node root = bvh_node(world.objects, 0, world.objects.size(), 0);
+  return SCENE{world, cam, root};
 }
 #endif

@@ -7,6 +7,7 @@ class ray
 {
 public:
   vec3 origin;
+  // direction
   vec3 velocity;
   ray();
   ray(vec3 a, vec3 b);
