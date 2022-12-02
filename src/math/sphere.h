@@ -6,6 +6,7 @@
 #include "hittablelist.h"
 // #include "aabb.h"
 #include "vec3.h"
+#include "util.h"
 #include <cmath>
 #include <memory>
 
@@ -79,6 +80,16 @@ bool sphere::hit(ray r, double t_min, double t_max, hit_record &rec)
   vec3 outward_normal = (rec.p - center) / radius;
   rec.set_face_normal(r, outward_normal);
   rec.mat_ptr = mat_ptr;
+
+  if (mat_ptr->has_texture)
+  {
+    rec.texture = true;
+    vec3 d = (rec.p - center).normalize();
+    // cerr << "*" << d << endl;
+    rec.u = clamp(0.5 + atan2(d[0], d[2]) / (2 * M_PI), 0, 1) * mat_ptr->texture_w;
+    rec.v = clamp(0.5 - asin(d[1]) / (M_PI), 0, 1) * mat_ptr->texture_h;
+    // cerr << "**" << rec.u << " " << rec.v << endl;
+  }
 
   return true;
 }

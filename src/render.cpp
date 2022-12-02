@@ -2,12 +2,12 @@
 using namespace std;
 
 const double aspect_ratio = 16.0 / 9.0;
-const int image_width = 400;
+const int image_width = 1080;
 const int image_height = static_cast<int>(image_width / aspect_ratio);
-const int samples_per_pixel = 10;
+const int samples_per_pixel = 50;
 const int max_depth = 50;
-const color BACKGROUND = color(0.4, 0.4, 0.4);
-SCENE scene = GET_SCENE_DEER(aspect_ratio);
+const color BACKGROUND = color(0.5, 0.5, 0.5);
+SCENE scene = GET_SCENE_EARTH(aspect_ratio);
 hittable_list world = scene.world;
 bvh_node bbx_root = scene.bbx_root;
 camera cam = scene.cam;
@@ -77,6 +77,15 @@ void add_color(double u, double v)
 vec3 pixel[image_width + 1];
 void render_pixel(int i, int j)
 {
+  if (samples_per_pixel == 1)
+  {
+    double u = (i + 0.5) / (image_width - 1);
+    double v = (j + 0.5) / (image_height - 1);
+    ray r = cam.get_ray(u, v);
+    pixel[i] += ray_color(r, BACKGROUND, max_depth);
+    return;
+  }
+
   for (int k = 0; k < samples_per_pixel; k++)
   {
     double u = (i + rand_unit()) / (image_width - 1);

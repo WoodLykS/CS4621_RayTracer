@@ -30,9 +30,6 @@ public:
     v2 = b;
     v3 = c;
     mat_ptr = m;
-    cerr << v1 << endl
-         << v2 << endl
-         << v3 << endl;
   }
 
   bool hit(ray r, double t_min, double t_max, hit_record &rec) override

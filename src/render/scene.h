@@ -33,66 +33,78 @@ void obj2lst(string fileName, double downSizeBy = 1.0)
   Material_M material_right = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
   // freopen(fileName.c_str(), "r", stdin);
   myfile.open(fileName, ios::in);
-
-  assert(!myfile.fail());
+  std::string mystring;
+  while (myfile >> mystring)
   {
-
-    std::string mystring;
-    while (myfile >> mystring)
+    // cerr << mystring << endl;
+    if (mystring == "v")
     {
-      // cerr << mystring << endl;
-      if (mystring == "v")
+      for (int i = 0; i < 3; i++)
       {
-        for (int i = 0; i < 3; i++)
-        {
-          myfile >> mystring;
-          double local = std::stod(mystring) / downSizeBy;
-          vertices[vacc].push_back(local);
-        }
-        vacc++;
+        myfile >> mystring;
+        double local = std::stod(mystring) * downSizeBy;
+        vertices[vacc].push_back(local);
       }
-      else if (mystring == "f")
-      {
-
-        int temp[3];
-        for (int i = 0; i < 3; i++)
-        {
-          myfile >> mystring;
-          int endIdx = mystring.rfind('/');
-          mystring = mystring.substr(0, endIdx - 1);
-          temp[i] = std::stoi(mystring);
-        }
-
-        point3 v1 = vec3(vertices[temp[0] - 1][0], vertices[temp[0] - 1][1], vertices[temp[0] - 1][2]);
-        point3 v2 = vec3(vertices[temp[1] - 1][0], vertices[temp[1] - 1][1], vertices[temp[1] - 1][2]);
-        point3 v3 = vec3(vertices[temp[2] - 1][0], vertices[temp[2] - 1][1], vertices[temp[2] - 1][2]);
-
-        cerr << temp[0] << " " << temp[1] << " " << temp[2] << endl;
-        cerr << v1.x() << " " << v1.y() << " " << v1.z() << endl;
-        cerr << v2.x() << " " << v2.y() << " " << v2.z() << endl;
-        cerr << v3.x() << " " << v3.y() << " " << v3.z() << endl;
-        flag = false;
-
-        mesh_lst.add(make_shared<triangle>(v1, v2, v3, material_right));
-      }
+      vacc++;
     }
-    // myfile.close();
+    else if (mystring == "f")
+    {
+
+      int temp[3];
+      for (int i = 0; i < 3; i++)
+      {
+        myfile >> mystring;
+        int endIdx = mystring.rfind('/');
+        mystring = mystring.substr(0, endIdx - 1);
+        temp[i] = std::stoi(mystring);
+      }
+
+      point3 v1 = vec3(vertices[temp[0] - 1][0], vertices[temp[0] - 1][1], vertices[temp[0] - 1][2]);
+      point3 v2 = vec3(vertices[temp[1] - 1][0], vertices[temp[1] - 1][1], vertices[temp[1] - 1][2]);
+      point3 v3 = vec3(vertices[temp[2] - 1][0], vertices[temp[2] - 1][1], vertices[temp[2] - 1][2]);
+
+      // cerr << temp[0] << " " << temp[1] << " " << temp[2] << endl;
+      // cerr << v1.x() << " " << v1.y() << " " << v1.z() << endl;
+      // cerr << v2.x() << " " << v2.y() << " " << v2.z() << endl;
+      // cerr << v3.x() << " " << v3.y() << " " << v3.z() << endl;
+      // flag = false;
+
+      mesh_lst.add(make_shared<triangle>(v1, v2, v3, material_right));
+    }
   }
-  cerr << "done" << endl;
+  // myfile.close();
+  cerr << "Object Loaded" << endl;
   return;
 }
 SCENE
 GET_SCENE_DEER(double aspect_ratio)
 {
-  obj2lst("/Users/taylor/Documents/CS4620/CS4621_RayTracer/src/deer.obj");
-  Material_M material_right = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
-  Material_M material_r = make_shared<metal>(color(1, 0, 0), 0.0);
+  obj2lst("./art/deer.obj", 2);
+  Material_L material_ground = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+  auto LIGHT_Blue = make_shared<light>(color(1, 1, 1));
+  mesh_lst.add(make_shared<sphere>(point3(0, 2.7, 4.5), 0.7, LIGHT_Blue));
+  // mesh_lst.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
+  camera cam(point3(13, 2, 7), point3(0, 0, 0), vec3(0, 1, 0), 50,
+             aspect_ratio, 0, 20);
 
-  // mesh_lst.add(make_shared<triangle>(point3(1, 1, 3), point3(-1, -1, 3), point3(1, -1, 3), material_r));
-  // mesh_lst.add(make_shared<triangle>(point3(1, 1, 3), point3(-1, 1, 3), point3(-1, -1, 3), material_r));
-  // mesh_lst.add(make_shared<triangle>(point3(-1, 1, -1), point3(1, 1, -1), point3(1, -1, -1), material_r));
-  // mesh_lst.add(make_shared<triangle>(point3(-1, 1, -1), point3(1, -1, -1), point3(-1, -1, -1), material_r));
-  // mesh_lst.add(make_shared<box>(point3(-0.8, -0.8, -0.8), point3(0.8, 0.8, 0.8), material_right));
+  bvh_node root = bvh_node(mesh_lst.objects, 0, mesh_lst.objects.size(), 0);
+  return SCENE{mesh_lst, cam, root};
+}
+SCENE
+GET_SCENE_EARTH(double aspect_ratio)
+{
+  Material_L material_earth = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+  material_earth->set_texture("./art/earthmap4k.ppm");
+  mesh_lst.add(make_shared<sphere>(point3(0, 2.7, 4.5), 0.9, material_earth));
+
+  Material_L material_mercury = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+  material_mercury->set_texture("./art/2k_mercury.ppm");
+  mesh_lst.add(make_shared<sphere>(point3(0, -1, 4.5), 0.9, material_mercury));
+
+  Material_L material_mars = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+  material_mars->set_texture("./art/2k_mars.ppm");
+  mesh_lst.add(make_shared<sphere>(point3(0, 0.7, 4.5), 0.9, material_mars));
+
   camera cam(point3(13, 2, 7), point3(0, 0, 0), vec3(0, 1, 0), 50,
              aspect_ratio, 0, 20);
 

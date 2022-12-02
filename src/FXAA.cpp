@@ -6,7 +6,7 @@
 #include "math/vec3.h"
 using namespace std;
 const int MAX_IMG_SIZE = 2800;
-const string FILENAME = "random";
+const string FILENAME = "render";
 const string IN_PATH = FILENAME + ".ppm";
 const string OUT_PATH = FILENAME + "_FXAA.ppm";
 int img_width;
@@ -138,7 +138,7 @@ int main()
 
       if (luma_max - luma_min < max(EDGE_THRESHOLD_MIN, luma_max * EDGE_THRESHOLD_MAX))
       {
-        // new_img[j][i] = img[j][i];
+        new_img[j][i] = img[j][i];
         continue;
       }
 

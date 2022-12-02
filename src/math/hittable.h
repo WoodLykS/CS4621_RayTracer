@@ -14,11 +14,14 @@ struct hit_record
   // we assume it points "out"
   vec3 normal;
   double t;
-  double u, v;
+  int u, v;
+  bool texture = false;
   // if the ray and the normal face in the same direction,
   // the ray is inside the object; otherwise, outside
   bool front_face;
   std::shared_ptr<material> mat_ptr;
+  // color texture_color;
+  // bool has_texture = false;
 
   inline void set_face_normal(ray r, vec3 outward_normal)
   {

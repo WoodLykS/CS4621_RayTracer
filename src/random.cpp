@@ -4,14 +4,15 @@ using namespace std;
 
 // Image
 const double aspect_ratio = 16.0 / 9.0;
-const int image_width = 400;
+const int image_width = 720;
 const int image_height = static_cast<int>(image_width / aspect_ratio);
 const int samples_per_pixel = 5;
 const int max_depth = 50;
-SCENE scene = GET_SCENE_1(aspect_ratio);
+const color BACKGROUND = color(0.9, 0.9, 0.9);
+SCENE scene = GET_SCENE_EARTH(aspect_ratio);
 hittable_list world = scene.world;
-camera cam = scene.cam;
 bvh_node bbx_root = scene.bbx_root;
+camera cam = scene.cam;
 color ray_color(ray &r, color background, hittable &world, int depth)
 {
   hit_record rec;
